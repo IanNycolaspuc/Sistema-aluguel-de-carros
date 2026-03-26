@@ -1,4 +1,4 @@
-# 🚗 Sistema de Aluguel de Carros
+# Sistema de Aluguel de Carros
 
 > **Disciplina:** Laboratório de Desenvolvimento de Software  
 > **Curso:** Engenharia de Software — 4º Período  
