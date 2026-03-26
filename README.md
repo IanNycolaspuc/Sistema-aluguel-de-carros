@@ -34,7 +34,7 @@ O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquit
 **Critérios de Aceitação:**
 - [ ] O sistema deve solicitar os dados obrigatórios: RG, CPF, Nome e Endereço
 - [ ] O sistema deve solicitar a profissão do usuário
-- [ ] O sistema deve permitir o cadastro de até 3 entidades empregadoras com seus respectivos rendimentos
+- [ ] O sistema deve permitir o cadastro de até 3 rendimentos
 - [ ] O CPF deve ser validado quanto ao formato
 - [ ] O sistema deve impedir cadastros duplicados pelo CPF
 - [ ] Após o cadastro, o usuário deve conseguir realizar login
@@ -53,7 +53,7 @@ O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquit
 
 ---
 
-## Módulo 2 — 📝 Pedidos de Aluguel (Cliente)
+##📝 Pedidos de Aluguel (Cliente)
 
 ### US03 — Criar Pedido de Aluguel
 
@@ -74,7 +74,7 @@ O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquit
 
 **Critérios de Aceitação:**
 - [ ] O cliente deve visualizar apenas seus próprios pedidos
-- [ ] O sistema deve exibir o status atualizado de cada pedido (ex: Em análise, Aprovado, Cancelado)
+- [ ] O sistema deve exibir o status atualizado de cada pedido (ex: Em análise, Aprovado, Cancelado, Anteriores)
 - [ ] Deve ser possível visualizar os detalhes de cada pedido individualmente
 - [ ] Os pedidos devem ser listados em ordem cronológica
 
@@ -129,17 +129,6 @@ O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquit
 
 ---
 
-### US09 — Modificar Pedido de Aluguel (Agente)
-
-> *Como um **agente**, eu quero **modificar informações de um pedido**, para que **eu possa corrigir dados antes da execução do contrato**.*
-
-**Critérios de Aceitação:**
-- [ ] O agente pode editar dados financeiros e informações complementares do pedido
-- [ ] Modificações realizadas pelo agente devem ser registradas com identificação do responsável
-- [ ] O histórico de modificações deve ser preservado
-
----
-
 ## Módulo 4 — 🚘 Automóveis e Contratos
 
 ### US10 — Registrar Automóvel
@@ -147,18 +136,18 @@ O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquit
 > *Como um **agente**, eu quero **registrar um automóvel no sistema**, para que **ele fique disponível para aluguel pelos clientes**.*
 
 **Critérios de Aceitação:**
-- [ ] O sistema deve registrar: matrícula, ano, marca, modelo e placa
+- [ ] O sistema deve registrar: matrícula do agente, ano, marca, modelo e placa
 - [ ] A placa deve ser única no sistema
-- [ ] O automóvel deve ser associado a um proprietário: cliente, empresa ou banco, conforme o tipo de contrato
+
 
 ---
 
-### US11 — Associar Contrato de Crédito ao Aluguel
+### US11 — Forma de pagamento
 
-> *Como um **banco agente**, eu quero **associar um contrato de crédito a um pedido de aluguel**, para que **o cliente possa financiar o aluguel por meio do banco**.*
+> *Como um **banco agente**, eu quero **associar forma de pagamento a um pedido de aluguel**, para que **o cliente possa alugar da forma que tiver condições**.*
 
 **Critérios de Aceitação:**
-- [ ] O contrato de crédito só pode ser concedido por um banco agente
+
 - [ ] O sistema deve registrar os dados do contrato vinculado ao pedido de aluguel
 - [ ] Um pedido pode ter no máximo um contrato de crédito associado
 
@@ -178,7 +167,7 @@ O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquit
 | US08 | Avaliar Pedido de Aluguel | Agente | Alta |
 | US09 | Modificar Pedido de Aluguel (Agente) | Agente | Média |
 | US10 | Registrar Automóvel | Agente | Alta |
-| US11 | Associar Contrato de Crédito | Banco Agente | Baixa |
+| US11 | Forma de pagamento | Banco Agente | Baixa |
 
 ---
 
