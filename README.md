@@ -8,7 +8,7 @@
 
 ## 📖 Sobre o Projeto
 
-Sistema desenvolvido para informatizar o processo de matrículas de uma universidade. A secretaria gerencia disciplinas e períodos de matrícula, alunos se inscrevem nas disciplinas e professores consultam suas turmas. Após a matrícula, o sistema notifica automaticamente o setor de cobranças.
+O projeto é um sistema web de aluguel de carros desenvolvido em Java com arquitetura MVC, como atividade prática da disciplina de Laboratório de Desenvolvimento de Software da PUC Minas. A proposta é construir uma plataforma onde clientes podem criar, modificar e cancelar pedidos de aluguel, enquanto agentes, empresas e bancos, avaliam esses pedidos financeiramente e aprovam ou reprovam os contratos. 
 
 ---
 
@@ -23,11 +23,13 @@ Sistema desenvolvido para informatizar o processo de matrículas de uma universi
 
 ---
 
-## Módulo 1 — 🔐 Cadastro e Autenticação
+## Cadastro e Autenticação
 
 ### US01 — Cadastro de Novo Usuário
 
-> *Como um **visitante**, eu quero **me cadastrar no sistema**, para que **eu possa acessar as funcionalidades de aluguel de automóveis**.*
+> *Como um **visitante**,
+>  eu quero **me cadastrar no sistema**,
+>  para que **eu possa acessar as funcionalidades de aluguel de automóveis**.*
 
 **Critérios de Aceitação:**
 - [ ] O sistema deve solicitar os dados obrigatórios: RG, CPF, Nome e Endereço
