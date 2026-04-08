@@ -19,8 +19,7 @@ micronaut:
           allowedHeaders:
             - Content-Type
             - Authorization
-
-logger:
-  levels:
-    com.carrental: DEBUG
-    io.micronaut: INFO
+  logging:
+    level:
+      com.carrental: DEBUG
+      io.micronaut: INFO
