@@ -1,0 +1,26 @@
+micronaut:
+  application:
+    name: car-rental-system
+  server:
+    port: 8080
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:3000
+            - http://localhost:8080
+          allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          allowedHeaders:
+            - Content-Type
+            - Authorization
+
+logger:
+  levels:
+    com.carrental: DEBUG
+    io.micronaut: INFO
