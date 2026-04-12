@@ -5,7 +5,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.aluguel"
+group = "com.carrental"
 
 repositories {
     mavenCentral()
@@ -32,6 +32,7 @@ dependencies {
     implementation("io.micronaut.validation:micronaut-validation")
  implementation("jakarta.validation:jakarta.validation-api")
  testImplementation("io.micronaut:micronaut-http-client")
+ implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
 }
 
 application {
@@ -48,7 +49,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.aluguel.*")
+        annotations("com.carrental.*")
     }
     aot {
         optimizeServiceLoading.set(false)
