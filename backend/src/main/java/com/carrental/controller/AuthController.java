@@ -1,7 +1,7 @@
 package com.carrental.controller;
 
-import com.carrental.dto.auth.LoginRequestDTO;
-import com.carrental.dto.auth.LoginResponseDTO;
+import com.carrental.dto.LoginRequestDTO;
+import com.carrental.dto.LoginResponseDTO;
 import com.carrental.service.AuthService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;

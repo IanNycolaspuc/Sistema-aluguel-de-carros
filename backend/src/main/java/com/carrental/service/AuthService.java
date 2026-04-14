@@ -1,7 +1,7 @@
 package com.carrental.service;
 
-import com.carrental.dto.auth.LoginRequestDTO;
-import com.carrental.dto.auth.LoginResponseDTO;
+import com.carrental.dto.LoginRequestDTO;
+import com.carrental.dto.LoginResponseDTO;
 import com.carrental.model.Usuario;
 import com.carrental.repository.UsuarioRepository;
 import jakarta.inject.Singleton;

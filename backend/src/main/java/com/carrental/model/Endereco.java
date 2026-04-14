@@ -1,10 +1,17 @@
 package com.carrental.model;
 
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Serdeable
+@Entity
+@Table(name = "enderecos")
 public class Endereco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank(message = "Logradouro é obrigatório")
     private String logradouro;
@@ -39,7 +46,9 @@ public class Endereco {
         this.cep = cep;
     }
 
-    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public String getLogradouro() { return logradouro; }
     public void setLogradouro(String logradouro) { this.logradouro = logradouro; }
 
@@ -60,11 +69,4 @@ public class Endereco {
 
     public String getCep() { return cep; }
     public void setCep(String cep) { this.cep = cep; }
-
-    @Override
-    public String toString() {
-        return logradouro + ", " + numero +
-               (complemento != null && !complemento.isBlank() ? " - " + complemento : "") +
-               ", " + bairro + ", " + cidade + "/" + estado + " - CEP: " + cep;
-    }
 }

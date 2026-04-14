@@ -1,4 +1,4 @@
-package com.carrental.dto.auth;
+package com.carrental.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 

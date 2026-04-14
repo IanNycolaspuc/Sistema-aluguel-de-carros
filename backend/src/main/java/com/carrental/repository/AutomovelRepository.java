@@ -11,4 +11,6 @@ import java.util.List;
 public interface AutomovelRepository extends CrudRepository<Automovel, Long> {
 
     List<Automovel> findByStatus(StatusAutomovel status);
+
+    List<Automovel> findAll(); // já herdado do CrudRepository, mas explícito pra clareza
 }

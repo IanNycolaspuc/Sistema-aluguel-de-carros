@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * Base URL: /api/clientes
  */
-@Controller("/api/clientes")
+@Controller("/clientes")
 @Produces(MediaType.APPLICATION_JSON)
 public class ClienteController {
 
