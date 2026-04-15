@@ -5,6 +5,7 @@ import com.carrental.model.PedidoAluguel;
 import com.carrental.enums.StatusPedido;
 import com.carrental.repository.PedidoRepository;
 import jakarta.inject.Singleton;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -17,7 +18,6 @@ public class PedidoService {
         this.repository = repository;
     }
 
-    
     public PedidoAluguel criar(PedidoCreateDTO dto) {
 
         PedidoAluguel pedido = new PedidoAluguel();
@@ -29,17 +29,14 @@ public class PedidoService {
         return repository.salvar(pedido);
     }
 
-    
     public List<PedidoAluguel> listarPorCliente(Long clienteId) {
         return repository.listarPorCliente(clienteId);
     }
 
-    
     public List<PedidoAluguel> listarTodos() {
         return repository.listarTodos();
     }
 
- 
     public void aprovar(Long id, Long agenteId) {
         PedidoAluguel pedido = repository.buscarPorId(id).orElseThrow();
 
@@ -48,7 +45,6 @@ public class PedidoService {
 
         repository.atualizar(pedido);
     }
-
 
     public void rejeitar(Long id, Long agenteId) {
         PedidoAluguel pedido = repository.buscarPorId(id).orElseThrow();
@@ -59,12 +55,15 @@ public class PedidoService {
         repository.atualizar(pedido);
     }
 
-
     public void cancelar(Long id) {
         PedidoAluguel pedido = repository.buscarPorId(id).orElseThrow();
 
         pedido.setStatus(StatusPedido.CANCELADO);
 
         repository.atualizar(pedido);
+    }
+
+    public Optional<PedidoAluguel> buscarPorId(Long id) {
+        return repository.buscarPorId(id);
     }
 }

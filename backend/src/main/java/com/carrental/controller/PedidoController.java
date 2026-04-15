@@ -16,37 +16,36 @@ public class PedidoController {
         this.service = service;
     }
 
-    
     @Post
     public PedidoAluguel criar(@Body PedidoCreateDTO dto) {
         return service.criar(dto);
     }
 
-   
     @Get("/cliente/{clienteId}")
     public List<PedidoAluguel> listarCliente(Long clienteId) {
         return service.listarPorCliente(clienteId);
     }
 
-    
     @Get
     public List<PedidoAluguel> listarTodos() {
         return service.listarTodos();
     }
 
-    
+    @Get("/{id}")
+    public PedidoAluguel buscar(Long id) {
+        return service.buscarPorId(id).orElse(null);
+    }
+
     @Put("/{id}/aprovar")
     public void aprovar(Long id, @QueryValue Long agenteId) {
         service.aprovar(id, agenteId);
     }
 
-    
     @Put("/{id}/rejeitar")
     public void rejeitar(Long id, @QueryValue Long agenteId) {
         service.rejeitar(id, agenteId);
     }
 
-   
     @Put("/{id}/cancelar")
     public void cancelar(Long id) {
         service.cancelar(id);
