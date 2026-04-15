@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './pages/Login/Login'
-import ClienteDashboard from './pages/ClienteDashboard/ClienteDashboard'
-import AgenteDashboard from './pages/AgenteDashboard/AgenteDashboard'
+import Login from './pages/login/Login'
+import ClienteDashboard from './pages/cliente/ClienteDashboard'
+import AgenteDashboard from './pages/agente/AgenteDashboard'
 import ProtectedRoute from './routes/ProtectedRoute'
 
 export default function App() {
