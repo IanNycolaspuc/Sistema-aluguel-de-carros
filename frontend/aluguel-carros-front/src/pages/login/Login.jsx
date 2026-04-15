@@ -23,7 +23,7 @@ export default function Login() {
       
 
       if (resposta.tipoUsuario === 'CLIENTE') {
-        navigate('/cliente/dashboard')
+        navigate('/')
       } else if (resposta.tipoUsuario === 'AGENTE') {
         navigate('/agente/dashboard')
       } else {
@@ -44,7 +44,9 @@ export default function Login() {
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      
       <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
+        
         <h3 className="text-center mb-4">Login</h3>
 
         <form onSubmit={handleLogin}>
