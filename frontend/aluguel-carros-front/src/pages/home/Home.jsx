@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
-
 
 const statusConfig = {
   DISPONIVEL: { label: 'Disponível', color: '#3B6D11', bg: '#EAF3DE' },
@@ -34,7 +34,6 @@ export default function Home() {
       navigate('/login')
       return
     }
-    // Navega para a tela de pedido passando o carro selecionado
     navigate('/cliente/pedido-aluguel', { state: { automovelSelecionado: carro } })
   }
 
@@ -42,113 +41,171 @@ export default function Home() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f9fafb' }}>
       <Header />
 
-      <main style={{ flex: 1, padding: '2rem' }}>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '4px' }}>
-            Encontre o carro ideal para sua viagem
-          </h1>
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>
-            {usuario
-              ? 'Selecione um veículo disponível e faça sua reserva.'
-              : 'Faça login para reservar um veículo.'}
-          </p>
+      <main style={{
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        padding: '40px 16px',
+        background: 'linear-gradient(135deg, #f1f5f9, #e0f2fe)',
+      }}>
+        <div style={{ width: '100%', maxWidth: '1200px' }}>
+
+          {/* Cabeçalho */}
+          <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: 700, color: '#111827' }}>
+              Encontre o carro ideal!
+            </h1>
+            <p style={{ color: '#6b7280', marginTop: '8px', fontSize: '14px' }}>
+              {usuario
+                ? 'Escolha um veículo e comece sua viagem'
+                : 'Faça login para alugar um veículo'}
+            </p>
+          </div>
+
+          {loading && <p style={{ color: '#6b7280' }}>Carregando...</p>}
+
+          {erro && (
+            <div style={{
+              background: '#FCEBEB',
+              color: '#A32D2D',
+              padding: '12px 14px',
+              borderRadius: '12px',
+              fontSize: '14px',
+            }}>
+              {erro}
+            </div>
+          )}
+
+          {!loading && !erro && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '20px',
+            }}>
+              {carros.map(carro => {
+                const s = statusConfig[carro.status] || statusConfig.DISPONIVEL
+                const disponivel = carro.status === 'DISPONIVEL'
+
+                return (
+                  <div key={carro.id} style={styles.card}>
+
+                    {/* Imagem */}
+                    <div style={styles.image}>carExemplo</div>
+
+                    {/* Conteúdo */}
+                    <div style={styles.content}>
+                      <div>
+                        <h3 style={styles.title}>{carro.marca} {carro.modelo}</h3>
+                        <p style={styles.subtitle}>{carro.ano} • {carro.placa}</p>
+                      </div>
+
+                      <div style={styles.price}>
+                        R$ {Number(carro.valorDiaria).toFixed(2)}
+                        <span style={styles.perDay}> / dia</span>
+                      </div>
+
+                      <span style={{
+                        ...styles.badge,
+                        background: s.bg,
+                        color: s.color,
+                      }}>
+                        {s.label}
+                      </span>
+
+                      <button
+                        onClick={() => handleAlugar(carro)}
+                        disabled={!disponivel}
+                        style={{
+                          ...styles.button,
+                          background: disponivel ? '#185FA5' : '#e5e7eb',
+                          color: disponivel ? '#fff' : '#9ca3af',
+                          cursor: disponivel ? 'pointer' : 'not-allowed',
+                        }}
+                      >
+                        {disponivel ? 'Alugar agora' : 'Indisponível'}
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
-
-        {loading && (
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>Carregando veículos...</p>
-        )}
-
-        {erro && (
-          <div style={{
-            background: '#FCEBEB', color: '#A32D2D',
-            padding: '12px 16px', borderRadius: '8px', fontSize: '14px'
-          }}>
-            {erro}
-          </div>
-        )}
-
-        {!loading && !erro && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: '16px',
-          }}>
-            {carros.map(carro => {
-              const s = statusConfig[carro.status] || statusConfig.DISPONIVEL
-              const disponivel = carro.status === 'DISPONIVEL'
-
-              return (
-                <div key={carro.id} style={{
-                  background: '#fff',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}>
-                  {/* Imagem / ícone */}
-                  <div style={{
-                    height: '110px',
-                    background: '#f3f4f6',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '48px',
-                  }}>
-                    🚗
-                  </div>
-
-                  {/* Corpo */}
-                  <div style={{ padding: '14px', flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ fontWeight: 600, fontSize: '15px' }}>
-                      {carro.marca} {carro.modelo}
-                    </div>
-                    <div style={{ fontSize: '13px', color: '#9ca3af' }}>
-                      {carro.ano} · {carro.placa} · {carro.matricula}
-                    </div>
-
-                    <span style={{
-                      alignSelf: 'flex-start',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      padding: '3px 10px',
-                      borderRadius: '4px',
-                      background: s.bg,
-                      color: s.color,
-                    }}>
-                      {s.label}
-                    </span>
-
-                    {/* Botão alugar */}
-                    <button
-                      onClick={() => handleAlugar(carro)}
-                      disabled={!disponivel}
-                      style={{
-                        marginTop: 'auto',
-                        paddingTop: '10px',
-                        width: '100%',
-                        padding: '9px',
-                        borderRadius: '8px',
-                        border: 'none',
-                        fontSize: '13px',
-                        fontWeight: 600,
-                        cursor: disponivel ? 'pointer' : 'not-allowed',
-                        background: disponivel ? '#185FA5' : '#e5e7eb',
-                        color: disponivel ? '#fff' : '#9ca3af',
-                        transition: 'background 0.15s',
-                      }}
-                    >
-                      {disponivel ? 'Alugar' : 'Indisponível'}
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
       </main>
 
       <Footer />
     </div>
   )
+}
+
+const styles = {
+  card: {
+    background: '#fff',
+    borderRadius: '16px',
+    border: '1px solid #e5e7eb',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: '0.2s',
+  },
+
+  image: {
+    height: '140px',
+    background: 'linear-gradient(135deg, #e0f2fe, #f1f5f9)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '60px',
+  },
+
+  content: {
+    padding: '18px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+  },
+
+  title: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#111827',
+  },
+
+  subtitle: {
+    fontSize: '13px',
+    color: '#9ca3af',
+    marginTop: '2px',
+  },
+
+  price: {
+    fontSize: '22px',
+    fontWeight: '700',
+    color: '#185FA5',
+  },
+
+  perDay: {
+    fontSize: '13px',
+    color: '#6b7280',
+    fontWeight: '400',
+  },
+
+  badge: {
+    alignSelf: 'flex-start',
+    fontSize: '11px',
+    fontWeight: '600',
+    padding: '4px 10px',
+    borderRadius: '8px',
+  },
+
+  button: {
+    marginTop: 'auto',
+    padding: '11px',
+    borderRadius: '12px',
+    border: 'none',
+    fontWeight: '600',
+    fontSize: '14px',
+    transition: '0.2s',
+  },
 }

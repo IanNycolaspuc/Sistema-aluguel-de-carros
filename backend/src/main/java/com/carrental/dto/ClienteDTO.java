@@ -48,6 +48,13 @@ public class ClienteDTO {
     @Valid
     private List<EntidadeEmpregadora> entidadesEmpregadoras = new ArrayList<>();
 
+    @NotBlank(message = "Senha é obrigatória")
+    @Size(min = 6, max = 100)
+    private String senha;
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+
     public ClienteDTO() {}
 
     // Getters e Setters

@@ -6,6 +6,7 @@ import com.carrental.enums.StatusPedido;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Serdeable
 @Entity
@@ -34,8 +35,16 @@ public class PedidoAluguel {
         this.dataSolicitacao = LocalDateTime.now();
     }
 
-    // getters e setters
+    private Integer quantidadeDias;
 
+    // getters e setters
+    public Integer getQuantidadeDias() {
+        return quantidadeDias;
+    }
+
+    public void setQuantidadeDias(Integer quantidadeDias) {
+        this.quantidadeDias = quantidadeDias;
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

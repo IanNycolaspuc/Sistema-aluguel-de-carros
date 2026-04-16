@@ -5,6 +5,7 @@ import com.carrental.exception.ClienteDuplicadoException;
 import com.carrental.exception.ClienteNaoEncontradoException;
 import com.carrental.model.Cliente;
 import com.carrental.repository.ClienteRepository;
+import com.carrental.enums.TipoUsuario;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -109,18 +110,22 @@ public class ClienteServiceImpl implements ClienteService {
 
     // ── Mapeamento DTO → Entidade ───────────────────────────────────────────
 
-    private Cliente toEntity(ClienteDTO dto) {
-        Cliente cliente = new Cliente();
-        cliente.setRg(dto.getRg());
-        cliente.setCpf(dto.getCpf());
-        cliente.setNome(dto.getNome());
-        cliente.setEmail(dto.getEmail());
-        cliente.setTelefone(dto.getTelefone());
-        cliente.setDataNascimento(dto.getDataNascimento());
-        cliente.setEndereco(dto.getEndereco());
-        cliente.setProfissao(dto.getProfissao());
-        // Validação do limite de 3 empregadoras é feita pelo setter da entidade
-        cliente.setEntidadesEmpregadoras(dto.getEntidadesEmpregadoras());
-        return cliente;
-    }
+   private Cliente toEntity(ClienteDTO dto) {
+    Cliente cliente = new Cliente();
+
+    cliente.setRg(dto.getRg());
+    cliente.setCpf(dto.getCpf());
+    cliente.setNome(dto.getNome());
+    cliente.setEmail(dto.getEmail());
+    cliente.setSenha(dto.getSenha()); 
+    cliente.setTipoUsuario(TipoUsuario.CLIENTE); 
+
+    cliente.setTelefone(dto.getTelefone());
+    cliente.setDataNascimento(dto.getDataNascimento());
+    cliente.setEndereco(dto.getEndereco());
+    cliente.setProfissao(dto.getProfissao());
+    cliente.setEntidadesEmpregadoras(dto.getEntidadesEmpregadoras());
+
+    return cliente;
+}
 }

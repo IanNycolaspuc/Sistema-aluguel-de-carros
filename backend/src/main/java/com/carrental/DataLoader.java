@@ -132,6 +132,36 @@ public class DataLoader implements ApplicationEventListener<ServerStartupEvent> 
         cronos.setAno(2023); cronos.setPlaca("PQR-1122");
         cronos.setMatricula("MAT006"); cronos.setStatus(StatusAutomovel.DISPONIVEL);
         em.persist(cronos);
+        corolla.setValorDiaria(new BigDecimal("150.00"));
+        civic.setValorDiaria(new BigDecimal("180.00"));
+        polo.setValorDiaria(new BigDecimal("140.00"));
+        onix.setValorDiaria(new BigDecimal("120.00"));
+        hb20.setValorDiaria(new BigDecimal("110.00"));
+        cronos.setValorDiaria(new BigDecimal("130.00"));
+
+        Automovel tracker = new Automovel();
+        tracker.setMarca("Chevrolet"); tracker.setModelo("Tracker");
+        tracker.setAno(2023); tracker.setPlaca("STU-7788");
+        tracker.setMatricula("MAT007");
+        tracker.setStatus(StatusAutomovel.DISPONIVEL);
+        tracker.setValorDiaria(new BigDecimal("200.00"));
+        em.persist(tracker);
+
+        Automovel compass = new Automovel();
+        compass.setMarca("Jeep"); compass.setModelo("Compass");
+        compass.setAno(2022); compass.setPlaca("VWX-3344");
+        compass.setMatricula("MAT008");
+        compass.setStatus(StatusAutomovel.DISPONIVEL);
+        compass.setValorDiaria(new BigDecimal("220.00"));
+        em.persist(compass);
+
+        Automovel kwid = new Automovel();
+        kwid.setMarca("Renault"); kwid.setModelo("Kwid");
+        kwid.setAno(2021); kwid.setPlaca("YZA-5566");
+        kwid.setMatricula("MAT009");
+        kwid.setStatus(StatusAutomovel.DISPONIVEL);
+        kwid.setValorDiaria(new BigDecimal("80.00"));
+        em.persist(kwid);
 
         em.flush();
 

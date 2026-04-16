@@ -11,12 +11,19 @@ import MeusPedidos from '../pages/cliente/MeusPedidos'
 import DetalhePedido from '../pages/cliente/DetalhePedido'
 import ProtectedRoute from './ProtectedRoute'
 import PedidoAluguelPage from '../pages/PedidoAluguelPage/PedidoAluguelPage'
+import CadastroCliente from '../pages/cliente/CadastroCliente'
+import ContatoEmail from '../pages/contato/ContatoEmail'
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
+
+      <Route path="/" element={<Home />} />          {/* era Login, agora é Home */}
+      <Route path="/login" element={<Login />} />    {/* Login vira rota própria */}
+      <Route path="/cadastro" element={<CadastroCliente />} />    {/* Login vira rota própria */}
+      <Route path="/contatoEmail" element={<ContatoEmail />} />    {/* Login vira rota própria */}
+      
+
 
       {/* Rotas do Cliente */}
       <Route path="/cliente/dashboard" element={

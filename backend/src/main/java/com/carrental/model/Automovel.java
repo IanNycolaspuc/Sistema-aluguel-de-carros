@@ -3,6 +3,7 @@ package com.carrental.model;
 import com.carrental.enums.StatusAutomovel;
 import jakarta.persistence.*;
 import io.micronaut.serde.annotation.Serdeable;
+import java.math.BigDecimal;
 
 @Serdeable
 @Entity
@@ -20,11 +21,20 @@ public class Automovel {
 
     @Enumerated(EnumType.STRING)
     private StatusAutomovel status;
+    private BigDecimal valorDiaria;
 
     // GETTERS E SETTERS
 
     public Long getId() {
         return id;
+    }
+
+    public BigDecimal getValorDiaria() {
+        return valorDiaria;
+    }
+
+    public void setValorDiaria(BigDecimal valorDiaria) {
+        this.valorDiaria = valorDiaria;
     }
 
     public void setId(Long id) {

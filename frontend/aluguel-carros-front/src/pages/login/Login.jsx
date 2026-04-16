@@ -1,92 +1,181 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { login } from '../../service/authService'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../service/authService";
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
-  const [erro, setErro] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e) {
-    e.preventDefault()
-    setErro('')
-    setLoading(true)
+    e.preventDefault();
+    setErro("");
+    setLoading(true);
 
     try {
-      const resposta = await login(email, senha)
-        
-      //salvando o usuário logado no local storage 
-      localStorage.setItem('usuarioLogado', JSON.stringify(resposta))
-      
+      const resposta = await login(email, senha);
 
-      if (resposta.tipoUsuario === 'CLIENTE') {
-        navigate('/')
-      } else if (resposta.tipoUsuario === 'AGENTE') {
-        navigate('/agente/dashboard')
+      localStorage.setItem("usuarioLogado", JSON.stringify(resposta));
+
+      if (resposta.tipoUsuario === "CLIENTE") {
+        navigate("/");
+      } else if (resposta.tipoUsuario === "AGENTE") {
+        navigate("/agente/dashboard");
       } else {
-        setErro('Tipo de usuário inválido.')
+        setErro("Tipo de usuário inválido.");
       }
     } catch (error) {
-      console.log(error)
-      setErro('Email ou senha inválidos.')
+      setErro("Email ou senha inválidos.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  // function logout() {
-  //   localStorage.removeItem('usuarioLogado')
-  //   window.location.href = '/'
-  // }
-
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div style={styles.container}>
       
-      <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
+      {/* Fundo com gradiente */}
+      <div style={styles.overlay}></div>
+
+      <div style={styles.card}>
         
-        <h3 className="text-center mb-4">Login</h3>
+        <h1 style={styles.logo}>CIEL Cars</h1>
+        <p style={styles.subtitle}>Acesse sua conta</p>
 
-        <form onSubmit={handleLogin}>
-          <div className="mb-3">
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Digite seu email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+        <form onSubmit={handleLogin} style={styles.form}>
 
-          <div className="mb-3">
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Digite sua senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              required
-            />
-          </div>
+          <input
+            type="email"
+            placeholder="Seu email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={styles.input}
+            required
+          />
 
-          {erro && (
-            <div className="alert alert-danger py-2 text-center">
-              {erro}
-            </div>
-          )}
+          <input
+            type="password"
+            placeholder="Sua senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            style={styles.input}
+            required
+          />
 
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={loading}
-          >
-            {loading ? 'Entrando...' : 'Entrar'}
+          {erro && <div style={styles.error}>{erro}</div>}
+
+          <button type="submit" disabled={loading} style={styles.button}>
+            {loading ? "Entrando..." : "Entrar"}
           </button>
+
+          <div style={styles.register}>
+            Não tem conta?{" "}
+            <span onClick={() => navigate("/cadastro")}>
+              Criar agora
+            </span>
+          </div>
+
         </form>
       </div>
     </div>
-  )
+  );
 }
+
+const styles = {
+  container: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    background: "linear-gradient(135deg, #0f172a, #185FA5)",
+  },
+
+  overlay: {
+    position: "absolute",
+    inset: 0,
+    backdropFilter: "blur(4px)",
+  },
+
+  card: {
+    position: "relative",
+    zIndex: 2,
+    width: "100%",
+    maxWidth: "380px",
+    background: "#ffffff",
+    padding: "35px 30px",
+    borderRadius: "18px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+
+  logo: {
+    textAlign: "center",
+    margin: 0,
+    fontSize: "26px",
+    fontWeight: "700",
+    color: "#185FA5",
+  },
+
+  subtitle: {
+    textAlign: "center",
+    margin: 0,
+    fontSize: "14px",
+    color: "#6b7280",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+
+  input: {
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    fontSize: "14px",
+    outline: "none",
+    transition: "0.2s",
+  },
+
+  button: {
+    marginTop: "10px",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "linear-gradient(135deg, #185FA5, #1d4ed8)",
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: "15px",
+    cursor: "pointer",
+    transition: "0.2s",
+  },
+
+  error: {
+    background: "#fee2e2",
+    color: "#b91c1c",
+    padding: "8px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    textAlign: "center",
+  },
+
+  register: {
+    textAlign: "center",
+    fontSize: "13px",
+    marginTop: "10px",
+    color: "#6b7280",
+  },
+
+  registerSpan: {
+    color: "#185FA5",
+    fontWeight: "600",
+    cursor: "pointer",
+  },
+};

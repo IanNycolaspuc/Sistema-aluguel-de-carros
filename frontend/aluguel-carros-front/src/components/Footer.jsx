@@ -1,21 +1,57 @@
+import { useNavigate } from 'react-router-dom'
+
 export default function Footer() {
+  const navigate = useNavigate()
+
   return (
-    <footer style={{
-      background: '#fff',
-      borderTop: '1px solid #e5e7eb',
-      padding: '1.25rem 2rem',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: 'auto',
-    }}>
-      <span style={{ fontSize: '12px', color: '#9ca3af' }}>
-        © 2026 ECIL Car. Todos os direitos reservados.
-      </span>
-      <div style={{ display: 'flex', gap: '16px' }}>
-        <a href="#" style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}>Sobre</a>
-        <a href="#" style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none' }}>Contato</a>
+    <footer style={styles.footer}>
+      
+      <div style={styles.brand}>
+        CIEL <span style={{ color: '#60a5fa' }}>Cars</span>
       </div>
+
+      <span style={styles.copy}>
+        © 2026 CIEL Cars. Todos os direitos reservados.
+      </span>
+
+      <div style={styles.links}>
+        <span onClick={() => navigate('/sobre')} style={styles.link}>Sobre</span>
+        <span onClick={() => navigate('/contatoEmail')} style={styles.link}>Contato</span>
+      </div>
+
     </footer>
   )
+}
+
+const styles = {
+  footer: {
+    background: '#0f172a',
+    color: '#9ca3af',
+    padding: '20px 30px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '10px'
+  },
+
+  brand: {
+    fontWeight: '700',
+    color: '#fff',
+    fontSize: '16px'
+  },
+
+  copy: {
+    fontSize: '13px'
+  },
+
+  links: {
+    display: 'flex',
+    gap: '16px'
+  },
+
+  link: {
+    cursor: 'pointer',
+    transition: '0.2s',
+  }
 }

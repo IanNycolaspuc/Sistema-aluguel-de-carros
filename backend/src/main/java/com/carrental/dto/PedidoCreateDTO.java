@@ -1,45 +1,25 @@
 package com.carrental.dto;
 
-import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 import java.time.LocalDate;
 
-@Introspected
+@Serdeable
 public class PedidoCreateDTO {
 
     private Long clienteId;
     private Long automovelId;
-    private LocalDate dataFimPretendida;
+    private Integer quantidadeDias;
     private String observacoes;
 
-    public Long getClienteId() {
-        return clienteId;
-    }
+    public Long getClienteId() { return clienteId; }
+    public void setClienteId(Long clienteId) { this.clienteId = clienteId; }
 
-    public void setClienteId(Long clienteId) {
-        this.clienteId = clienteId;
-    }
+    public Long getAutomovelId() { return automovelId; }
+    public void setAutomovelId(Long automovelId) { this.automovelId = automovelId; }
 
-    public Long getAutomovelId() {
-        return automovelId;
-    }
+    public Integer getQuantidadeDias() { return quantidadeDias; }
+    public void setQuantidadeDias(Integer quantidadeDias) { this.quantidadeDias = quantidadeDias; }
 
-    public void setAutomovelId(Long automovelId) {
-        this.automovelId = automovelId;
-    }
-
-    public LocalDate getDataFimPretendida() {
-        return dataFimPretendida;
-    }
-
-    public void setDataFimPretendida(LocalDate dataFimPretendida) {
-        this.dataFimPretendida = dataFimPretendida;
-    }
-
-    public String getObservacoes() {
-        return observacoes;
-    }
-
-    public void setObservacoes(String observacoes) {
-        this.observacoes = observacoes;
-    }
+    public String getObservacoes() { return observacoes; }
+    public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
 }
