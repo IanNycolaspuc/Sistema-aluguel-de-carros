@@ -67,7 +67,7 @@ export default function MeusPedidos() {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/home')} // para voltar pra tela anterior, inclui o home  //
             style={{
               marginBottom: '20px',
               padding: '8px 16px',

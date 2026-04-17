@@ -13,17 +13,22 @@ import ProtectedRoute from './ProtectedRoute'
 import PedidoAluguelPage from '../pages/PedidoAluguelPage/PedidoAluguelPage'
 import CadastroCliente from '../pages/cliente/CadastroCliente'
 import ContatoEmail from '../pages/contato/ContatoEmail'
+import Landing from '../pages/landing/Landing' // Add isso
+
 
 export default function AppRoutes() {
   return (
-    <Routes>
-
-      <Route path="/" element={<Home />} />          {/* era Login, agora é Home */}
-      <Route path="/login" element={<Login />} />    {/* Login vira rota própria */}
-      <Route path="/cadastro" element={<CadastroCliente />} />    {/* Login vira rota própria */}
-      <Route path="/contatoEmail" element={<ContatoEmail />} />    {/* Login vira rota própria */}
+<Routes>
+      {/* ROTA RAIZ: Agora exibe a Landing Page (página de marketing/apresentação). Antes aqui ficava a Home ou o Login.*/}
+      <Route path="/" element={<Landing />} /> 
       
-
+      {/* Rota para a página principal do sistema após o portal de entrada */}
+      <Route path="/home" element={<Home />} /> 
+      
+      {/* Rotas Públicas de Acesso e Suporte */}
+      <Route path="/login" element={<Login />} /> 
+      <Route path="/cadastro" element={<CadastroCliente />} /> 
+      <Route path="/contatoEmail" element={<ContatoEmail />} />
 
       {/* Rotas do Cliente */}
       <Route path="/cliente/dashboard" element={

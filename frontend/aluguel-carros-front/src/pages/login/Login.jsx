@@ -21,7 +21,7 @@ export default function Login() {
       localStorage.setItem("usuarioLogado", JSON.stringify(resposta));
 
       if (resposta.tipoUsuario === "CLIENTE") {
-        navigate("/");
+        navigate('/home'); // ao fazer login continuo na tela de aluguel de carros. mudei de navigate() para o que esta agora // 
       } else if (resposta.tipoUsuario === "AGENTE") {
         navigate("/agente/dashboard");
       } else {
