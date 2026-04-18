@@ -1,131 +1,143 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  const navigate = useNavigate()
-  const usuario = JSON.parse(localStorage.getItem('usuarioLogado'))
+  const navigate = useNavigate();
+  const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
   function handleLogout() {
-    localStorage.removeItem('usuarioLogado')
-    navigate('/')
+    localStorage.removeItem("usuarioLogado");
+    navigate("/");
   }
 
   return (
     <header style={styles.header}>
-      <div style={styles.logo} onClick={() => navigate('/')}>
-        CIEL <span style={{ color: '#60a5fa' }}>Cars</span>
+      
+      {/* LOGO */}
+      <div style={styles.logo} onClick={() => navigate("/")}>
+        CIEL Cars
       </div>
 
+      {/* AÇÕES */}
       <div style={styles.right}>
         {usuario ? (
           <>
             <span style={styles.user}>
-              Olá, {usuario.nome.split(' ')[0]}
+              Olá, {usuario.nome.split(" ")[0]}
             </span>
 
-            {/* 👇 CLIENTE */}
-            {usuario.tipoUsuario === 'CLIENTE' && (
+            {/* CLIENTE */}
+            {usuario.tipoUsuario === "CLIENTE" && (
               <>
                 <button
-                  onClick={() => navigate('/cliente/pedidos')}
-                  style={styles.navBtn}
+                  onClick={() => navigate("/cliente/pedidos")}
+                  style={styles.orangeBtn}
                 >
                   Meus Pedidos
                 </button>
 
                 <button
-                  onClick={() => navigate('/cliente/perfil')}
-                  style={styles.navBtn}
+                  onClick={() => navigate("/cliente/perfil")}
+                  style={styles.orangeBtn}
                 >
                   Meus Dados
                 </button>
               </>
             )}
 
-            {/* 👇 AGENTE */}
-            {usuario.tipoUsuario === 'AGENTE' && (
+            {/* AGENTE */}
+            {usuario.tipoUsuario === "AGENTE" && (
               <button
-                onClick={() => navigate('/agente/dashboard')}
-                style={styles.navBtn}
+                onClick={() => navigate("/agente/dashboard")}
+                style={styles.orangeBtn}
               >
                 Dashboard
               </button>
             )}
 
-            <button onClick={handleLogout} style={styles.logout}>
+            <button onClick={handleLogout} style={styles.logoutBtn}>
               Sair
             </button>
           </>
         ) : (
-          <button onClick={() => navigate('/login')} style={styles.login}>
+          <button onClick={() => navigate("/login")} style={styles.primaryBtn}>
             Entrar
           </button>
         )}
       </div>
     </header>
-  )
+  );
 }
 
 const styles = {
   header: {
-    background: 'linear-gradient(135deg, #0f172a, #185FA5)',
-    padding: '0 2rem',
-    height: '65px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    color: '#fff',
-    position: 'sticky',
+    position: "5px", // 🔥 CORRIGIDO (antes tava errado)
     top: 0,
-    zIndex: 100,
-    boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+    left: 0,
+    right: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "14px 48px",
+    background: "rgba(15,15,30,0.92)",
+    backdropFilter: "blur(12px)",
+    zIndex: 1000,
   },
 
   logo: {
-    fontSize: '22px',
-    fontWeight: '700',
-    cursor: 'pointer',
-    letterSpacing: '0.5px'
+    color: "#fff",
+    fontWeight: 900,
+    fontSize: 20,
+    cursor: "pointer"
   },
 
   right: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px'
+    display: "flex",
+    alignItems: "center",
+    gap: "10px"
   },
 
   user: {
-    fontSize: '14px',
-    opacity: 0.9
+    color: "#ccc",
+    fontSize: "14px",
+    marginRight: "6px"
   },
 
-  navBtn: {
-    background: 'rgba(255,255,255,0.1)',
-    color: '#fff',
-    border: '1px solid rgba(255,255,255,0.3)',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: '500',
-    transition: '0.2s',
+  /* BOTÃO PRINCIPAL */
+  primaryBtn: {
+    padding: "12px 26px",
+    borderRadius: 12,
+    border: "none",
+    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    color: "#1a1a2e",
+    fontWeight: 900,
+    cursor: "pointer",
+    fontSize: 14,
+    boxShadow: "0 8px 20px rgba(245, 158, 11, 0.35)",
   },
 
-  login: {
-    background: '#fff',
-    color: '#185FA5',
-    border: 'none',
-    padding: '8px 18px',
-    borderRadius: '20px',
-    fontWeight: '600',
-    cursor: 'pointer'
+  /* 🔥 BOTÕES LARANJA (NOVO PADRÃO) */
+  orangeBtn: {
+    padding: "10px 18px",
+    borderRadius: 10,
+    border: "none",
+    background: "linear-gradient(135deg,#f59e0b,#f97316)",
+    color: "#1a1a2e",
+    fontWeight: 700,
+    cursor: "pointer",
+    fontSize: 13,
+    boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
+    transition: "0.2s"
   },
 
-  logout: {
-    background: 'transparent',
-    color: '#fff',
-    border: '1px solid rgba(255,255,255,0.4)',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    cursor: 'pointer'
+  /* LOGOUT (mais discreto) */
+  logoutBtn: {
+    padding: "10px 18px",
+    borderRadius: 10,
+    border: "1px solid #f97316",
+    background: "transparent",
+    color: "#f97316",
+    fontWeight: 600,
+    cursor: "pointer",
+    fontSize: 13,
   }
-}
+};

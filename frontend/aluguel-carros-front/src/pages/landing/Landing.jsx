@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 const faqData = [
   {
     q: "Quais documentos são necessários para alugar um carro?",
@@ -151,20 +152,7 @@ useEffect(() => {
   return (
     <div style={s.page}>
 
-      {/* ── NAVBAR ── */}
-      <nav style={s.nav}>
-        <span style={s.logo}>CIEL Cars</span>
-        <div style={s.navLinks}>
-          <a href="#destinos" style={s.navLink}>Destinos</a>
-          <a href="#vantagens" style={s.navLink}>Vantagens</a>
-          <a href="#faq" style={s.navLink}>Ajuda</a>
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-        </div>
-        <button style={s.navBtn} onClick={() => navigate("/home")}>
-          Alugar agora
-        </button>
-      </nav>
+      <Header/>
 
 
       {/* ── HERO ── */}
@@ -529,56 +517,9 @@ useEffect(() => {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer style={s.footer}>
-        <div style={s.footerGrid}>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 12 }}>🚘 CIEL Cars</div>
-            <div style={s.footerLinks}>
-              <a href="#" style={s.footerLink}>Simulador de tarifa</a>
-              <a href="#" style={s.footerLink}>Locadoras de carros</a>
-              <a href="#" style={s.footerLink}>Cidades de retirada</a>
-              <a href="#" style={s.footerLink}>Aeroportos de retirada</a>
-              <a href="#" style={s.footerLink}>Promoções</a>
-              <a href="#" style={s.footerLink}>Blog CIEL Cars</a>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontWeight: 700, marginBottom: 12 }}>Locadoras de veículos</div>
-            <div style={s.footerLinks}>
-              <a href="#" style={s.footerLink}>Cadastre sua locadora</a>
-              <a href="#" style={s.footerLink}>Faça parte do programa</a>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontWeight: 700, marginBottom: 12 }}>Sobre nós</div>
-            <div style={s.footerLinks}>
-              <a href="#" style={s.footerLink}>Sobre a CIEL Cars</a>
-              <a href="#" style={s.footerLink}>Política de Privacidade</a>
-              <a href="#" style={s.footerLink}>Política de Cookies</a>
-              <a href="#" style={s.footerLink}>Termos e Condições</a>
-              <a href="#" style={s.footerLink}>Código de Conduta</a>
-              <a href="#" style={s.footerLink}>Carreiras</a>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontWeight: 700, marginBottom: 12 }}>Suporte ao cliente</div>
-            <div style={s.footerLinks}>
-              <a href="#" style={s.footerLink}>Entre em contato</a>
-              <a href="#" style={s.footerLink}>Gerenciar minha reserva</a>
-              <a href="#" style={s.footerLink}>Central de ajuda</a>
-              <a href="#" style={s.footerLink}>Questões frequentes</a>
-              <a href="#" style={s.footerLink}>Recursos para viajantes</a>
-              <a href="#" style={s.footerLink}>Melhor Preço Garantido</a>
-            </div>
-          </div>
-        </div>
-        <div style={s.footerBottom}>
-          © 2026 CIEL Cars • Todos os direitos reservados
-        </div>
-      </footer>
+      <Footer/>
     </div>
-  );
+  );  
 }
 
 const s = {

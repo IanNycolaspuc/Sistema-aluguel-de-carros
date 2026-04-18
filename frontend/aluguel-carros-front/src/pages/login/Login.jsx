@@ -21,7 +21,7 @@ export default function Login() {
       localStorage.setItem("usuarioLogado", JSON.stringify(resposta));
 
       if (resposta.tipoUsuario === "CLIENTE") {
-        navigate('/home'); // ao fazer login continuo na tela de aluguel de carros. mudei de navigate() para o que esta agora // 
+        navigate('/home');
       } else if (resposta.tipoUsuario === "AGENTE") {
         navigate("/agente/dashboard");
       } else {
@@ -37,12 +37,11 @@ export default function Login() {
   return (
     <div style={styles.container}>
       
-      {/* Fundo com gradiente */}
       <div style={styles.overlay}></div>
 
       <div style={styles.card}>
         
-        <h1 style={styles.logo}>CIEL Cars</h1>
+        <h1 style={styles.logo}>logo CIEL Cars</h1>
         <p style={styles.subtitle}>Acesse sua conta</p>
 
         <form onSubmit={handleLogin} style={styles.form}>
@@ -73,7 +72,10 @@ export default function Login() {
 
           <div style={styles.register}>
             Não tem conta?{" "}
-            <span onClick={() => navigate("/cadastro")}>
+            <span
+              style={styles.registerSpan}
+              onClick={() => navigate("/cadastro")}
+            >
               Criar agora
             </span>
           </div>
@@ -91,13 +93,13 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    background: "linear-gradient(135deg, #0f172a, #185FA5)",
+    background: "linear-gradient(135deg, #0f172a, #1a1a2e)",
   },
 
   overlay: {
     position: "absolute",
     inset: 0,
-    backdropFilter: "blur(4px)",
+    backdropFilter: "blur(6px)",
   },
 
   card: {
@@ -106,9 +108,9 @@ const styles = {
     width: "100%",
     maxWidth: "380px",
     background: "#ffffff",
-    padding: "35px 30px",
+    padding: "36px 30px",
     borderRadius: "18px",
-    boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+    boxShadow: "0 25px 60px rgba(0,0,0,0.25)",
     display: "flex",
     flexDirection: "column",
     gap: "16px",
@@ -118,8 +120,8 @@ const styles = {
     textAlign: "center",
     margin: 0,
     fontSize: "26px",
-    fontWeight: "700",
-    color: "#185FA5",
+    fontWeight: "900",
+    color: "#1a1a2e",
   },
 
   subtitle: {
@@ -136,25 +138,26 @@ const styles = {
   },
 
   input: {
-    padding: "12px",
+    padding: "12px 14px",
     borderRadius: "10px",
     border: "1px solid #e5e7eb",
     fontSize: "14px",
     outline: "none",
-    transition: "0.2s",
+    transition: "all 0.2s ease",
   },
 
   button: {
     marginTop: "10px",
     padding: "12px",
-    borderRadius: "10px",
+    borderRadius: "12px",
     border: "none",
-    background: "linear-gradient(135deg, #185FA5, #1d4ed8)",
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: "15px",
+    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    color: "#1a1a2e",
+    fontWeight: "800",
+    fontSize: "14px",
     cursor: "pointer",
-    transition: "0.2s",
+    boxShadow: "0 8px 20px rgba(245, 158, 11, 0.35)",
+    transition: "all 0.2s ease",
   },
 
   error: {
@@ -174,8 +177,8 @@ const styles = {
   },
 
   registerSpan: {
-    color: "#185FA5",
-    fontWeight: "600",
+    color: "#f59e0b",
+    fontWeight: "700",
     cursor: "pointer",
   },
 };

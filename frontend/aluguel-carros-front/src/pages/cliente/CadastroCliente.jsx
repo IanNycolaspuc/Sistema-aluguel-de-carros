@@ -51,19 +51,7 @@ export default function CadastroCliente() {
   async function buscarCep(cep) {
     const cepLimpo = cep.replace(/\D/g, "");
 
-    if (cepLimpo.length !== 8) {
-      setForm((prev) => ({
-        ...prev,
-        endereco: {
-          ...prev.endereco,
-          rua: "",
-          bairro: "",
-          cidade: "",
-          estado: "",
-        },
-      }));
-      return;
-    }
+    if (cepLimpo.length !== 8) return;
 
     try {
       setBuscandoCep(true);
@@ -71,11 +59,6 @@ export default function CadastroCliente() {
       const res = await axios.get(
         `https://viacep.com.br/ws/${cepLimpo}/json/`
       );
-
-      if (res.data.erro) {
-        setErro("CEP não encontrado");
-        return;
-      }
 
       setForm((prev) => ({
         ...prev,
@@ -87,8 +70,7 @@ export default function CadastroCliente() {
           estado: res.data.uf,
         },
       }));
-    } catch (err) {
-      console.error(err);
+    } catch {
       setErro("Erro ao buscar CEP");
     } finally {
       setBuscandoCep(false);
@@ -100,146 +82,84 @@ export default function CadastroCliente() {
     setLoading(true);
     setErro("");
 
-    const payload = {
-      ...form,
-      entidadesEmpregadoras: [],
-    };
-
     try {
-      await axios.post("http://localhost:8080/clientes", payload);
+      await axios.post("http://localhost:8080/clientes", {
+        ...form,
+        entidadesEmpregadoras: [],
+      });
+
       alert("Cadastro realizado com sucesso!");
       navigate("/login");
-    } catch (err) {
-      console.error(err);
+    } catch {
       setErro("Erro ao cadastrar cliente");
     } finally {
       setLoading(false);
     }
   }
 
-  const inputStyle = {
-    padding: "12px 14px",
-    borderRadius: "12px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    outline: "none",
-    transition: "all 0.2s ease",
-  };
-
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        background: "#f9fafb",
-      }}
-    >
+    <div style={styles.page}>
       <Header />
 
-      <main
-        style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "40px 16px",
-          background: "linear-gradient(135deg, #f1f5f9, #e0f2fe)",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "700px",
-            background: "#fff",
-            padding: "30px",
-            borderRadius: "16px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h2 style={{ marginBottom: "20px", color: "#185FA5" }}>
-            Criar Conta
-          </h2>
+      <main style={styles.main}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>Criar Conta</h2>
+          <p style={styles.subtitle}>
+            Preencha seus dados para começar
+          </p>
 
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-          >
-            <input style={inputStyle} name="nome" placeholder="Nome" onChange={handleChange} required />
-            <input style={inputStyle} name="email" placeholder="Email" onChange={handleChange} required />
-            <input style={inputStyle} name="senha" type="password" placeholder="Senha" onChange={handleChange} required />
+          <form onSubmit={handleSubmit} style={styles.form}>
 
-            <InputMask mask="999.999.999-99" value={form.cpf} onChange={handleChange}>
-              {(inputProps) => (
-                <input {...inputProps} style={inputStyle} name="cpf" placeholder="CPF" required />
-              )}
-            </InputMask>
+            <div style={styles.grid}>
+              <input style={styles.input} name="nome" placeholder="Nome completo" onChange={handleChange} required />
+              <input style={styles.input} name="email" placeholder="Email" onChange={handleChange} required />
+              <input style={styles.input} name="senha" type="password" placeholder="Senha" onChange={handleChange} required />
 
-            <input style={inputStyle} name="rg" placeholder="RG" onChange={handleChange} required />
+              <InputMask mask="999.999.999-99" value={form.cpf} onChange={handleChange}>
+                {(props) => <input {...props} style={styles.input} name="cpf" placeholder="CPF" required />}
+              </InputMask>
 
-            <InputMask mask="(99) 99999-9999" value={form.telefone} onChange={handleChange}>
-              {(inputProps) => (
-                <input {...inputProps} style={inputStyle} name="telefone" placeholder="Telefone" required />
-              )}
-            </InputMask>
+              <input style={styles.input} name="rg" placeholder="RG" onChange={handleChange} required />
 
-            <input style={inputStyle} name="dataNascimento" type="date" onChange={handleChange} required />
-            <input style={inputStyle} name="profissao" placeholder="Profissão" onChange={handleChange} required />
+              <InputMask mask="(99) 99999-9999" value={form.telefone} onChange={handleChange}>
+                {(props) => <input {...props} style={styles.input} name="telefone" placeholder="Telefone" required />}
+              </InputMask>
 
-            <h4 style={{ marginTop: "10px", color: "#185FA5" }}>Endereço</h4>
+              <input style={styles.input} type="date" name="dataNascimento" onChange={handleChange} required />
+              <input style={styles.input} name="profissao" placeholder="Profissão" onChange={handleChange} required />
+            </div>
 
-            <InputMask
-              mask="99999-999"
-              value={form.endereco.cep}
-              onChange={(e) => {
-                const value = e.target.value;
+            <h4 style={styles.sectionTitle}>Endereço</h4>
 
-                handleEnderecoChange({
-                  target: {
-                    name: "cep",
-                    value: value,
-                  },
-                });
+            <div style={styles.grid}>
+              <InputMask
+                mask="99999-999"
+                value={form.endereco.cep}
+                onChange={(e) => {
+                  handleEnderecoChange({
+                    target: { name: "cep", value: e.target.value },
+                  });
+                  buscarCep(e.target.value);
+                }}
+              >
+                {(props) => <input {...props} style={styles.input} placeholder="CEP" required />}
+              </InputMask>
 
-                buscarCep(value);
-              }}
-            >
-              {(inputProps) => (
-                <input {...inputProps} style={inputStyle} name="cep" placeholder="CEP" required />
-              )}
-            </InputMask>
+              <input style={styles.input} name="rua" value={form.endereco.rua} placeholder="Rua" onChange={handleEnderecoChange} required />
+              <input style={styles.input} name="numero" placeholder="Número" onChange={handleEnderecoChange} required />
+              <input style={styles.input} name="bairro" value={form.endereco.bairro} placeholder="Bairro" onChange={handleEnderecoChange} required />
+              <input style={styles.input} name="cidade" value={form.endereco.cidade} placeholder="Cidade" onChange={handleEnderecoChange} required />
+              <input style={styles.input} name="estado" value={form.endereco.estado} placeholder="Estado" onChange={handleEnderecoChange} required />
+              <input style={styles.input} name="logradouro" placeholder="Complemento" onChange={handleEnderecoChange} />
+            </div>
 
-            {buscandoCep && (
-              <span style={{ fontSize: "12px", color: "#185FA5" }}>
-                Buscando CEP...
-              </span>
-            )}
+            {buscandoCep && <span style={styles.info}>Buscando CEP...</span>}
+            {erro && <div style={styles.error}>{erro}</div>}
 
-            <input style={inputStyle} name="rua" placeholder="Rua" value={form.endereco.rua} onChange={handleEnderecoChange} required />
-            <input style={inputStyle} name="numero" placeholder="Número" onChange={handleEnderecoChange} required />
-            <input style={inputStyle} name="bairro" placeholder="Bairro" value={form.endereco.bairro} onChange={handleEnderecoChange} required />
-            <input style={inputStyle} name="cidade" placeholder="Cidade" value={form.endereco.cidade} onChange={handleEnderecoChange} required />
-            <input style={inputStyle} name="estado" placeholder="Estado" value={form.endereco.estado} onChange={handleEnderecoChange} required />
-            <input style={inputStyle} name="logradouro" placeholder="Complemento" onChange={handleEnderecoChange} />
-
-            {erro && <div style={{ color: "red" }}>{erro}</div>}
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                marginTop: "10px",
-                padding: "12px",
-                background: "#185FA5",
-                color: "#fff",
-                border: "none",
-                borderRadius: "12px",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
-            >
-              {loading ? "Cadastrando..." : "Cadastrar"}
+            <button type="submit" disabled={loading} style={styles.button}>
+              {loading ? "Cadastrando..." : "Criar conta"}
             </button>
+
           </form>
         </div>
       </main>
@@ -248,3 +168,95 @@ export default function CadastroCliente() {
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "linear-gradient(135deg,#0f172a,#1a1a2e)",
+  },
+
+  main: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "60px 20px",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: "900px",
+    background: "#fff",
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 30px 80px rgba(0,0,0,0.25)",
+  },
+
+  title: {
+    margin: 0,
+    fontSize: "26px",
+    fontWeight: 800,
+    color: "#1a1a2e",
+  },
+
+  subtitle: {
+    fontSize: "14px",
+    color: "#6b7280",
+    marginBottom: "20px",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px,1fr))",
+    gap: "12px",
+  },
+
+  input: {
+    padding: "12px 14px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    fontSize: "14px",
+    outline: "none",
+    transition: "all 0.2s",
+  },
+
+  sectionTitle: {
+    marginTop: "10px",
+    fontWeight: 700,
+    color: "#1a1a2e",
+  },
+
+  button: {
+    marginTop: "10px",
+    padding: "14px",
+    borderRadius: "12px",
+    border: "none",
+    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    color: "#1a1a2e",
+    fontWeight: 800,
+    cursor: "pointer",
+    fontSize: "15px",
+    boxShadow: "0 10px 25px rgba(245,158,11,0.35)",
+  },
+
+  error: {
+    background: "#fee2e2",
+    color: "#b91c1c",
+    padding: "10px",
+    borderRadius: "8px",
+    fontSize: "13px",
+  },
+
+  info: {
+    fontSize: "12px",
+    color: "#f59e0b",
+  },
+};
