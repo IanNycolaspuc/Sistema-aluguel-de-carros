@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import logoCiel from "../assets/logo-ciel.png"
 export default function Header() {
   const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -14,7 +14,7 @@ export default function Header() {
       
       {/* LOGO */}
       <div style={styles.logo} onClick={() => navigate("/")}>
-        CIEL Cars
+        <img src={logoCiel} alt="CIEL Cars" style={styles.logoImg} />
       </div>
 
       {/* AÇÕES */}
@@ -139,5 +139,11 @@ const styles = {
     fontWeight: 600,
     cursor: "pointer",
     fontSize: 13,
-  }
+  },
+  
+  logoImg: {
+  height: "34px",
+  objectFit: "contain",
+  cursor: "pointer"
+},
 };

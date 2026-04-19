@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
 import { buscarPedidoPorId } from '../../service/clienteService'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
 
-export default function DetalhePedido() {
-  const { id } = useParams()
-  const navigate = useNavigate()
+export default function DetalhePedidoModal({ id, onClose }) {
   const [pedido, setPedido] = useState(null)
 
   useEffect(() => {
+    if (!id) return
+
     buscarPedidoPorId(id)
       .then((response) => {
         setPedido(response.data)
@@ -36,90 +33,105 @@ export default function DetalhePedido() {
     }
   }
 
-  if (!pedido) {
-    return (
-      <div style={{ padding: '40px', textAlign: 'center' }}>
-        Carregando...
-      </div>
-    )
-  }
+  if (!id) return null
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Header />
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
 
-      <main
-        style={{
-          flex: 1,
-          padding: '40px 16px',
-          background: 'linear-gradient(135deg, #f1f5f9, #e0f2fe)'
-        }}
-      >
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-
-          <button
-            onClick={() => navigate('/cliente/pedidos')}
-            style={{
-              marginBottom: '20px',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              border: '1px solid #d1d5db',
-              background: '#fff',
-              cursor: 'pointer'
-            }}
-          >
-            ← Voltar
-          </button>
-
-          <h1 style={{ marginBottom: '20px', color: '#185FA5' }}>
-            Detalhe do Pedido
-          </h1>
-
-          <div
-            style={{
-              background: '#fff',
-              padding: '25px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.05)'
-            }}
-          >
-            <h3 style={{ marginBottom: '15px' }}>
-              Pedido #{pedido.id}
-            </h3>
+        {!pedido ? (
+          <p style={styles.loading}>Carregando...</p>
+        ) : (
+          <>
+            <div style={styles.header}>
+              <h2 style={styles.title}>Pedido #{pedido.id}</h2>
+              <button onClick={onClose} style={styles.closeBtn}>✕</button>
+            </div>
 
             <div
               style={{
+                ...styles.status,
                 ...getStatusStyle(pedido.status),
-                display: 'inline-block',
-                padding: '6px 12px',
-                borderRadius: '12px',
-                fontSize: '13px',
-                fontWeight: '600',
-                marginBottom: '15px'
               }}
             >
               {pedido.status}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <p>
-                <strong> Data:</strong> {formatarData(pedido.dataSolicitacao)}
-              </p>
-
-              <p>
-                <strong> Valor:</strong> R$ {pedido.valorPrevisto}
-              </p>
-
-              <p>
-                <strong> Observações:</strong>{' '}
-                {pedido.observacoes || 'Nenhuma'}
-              </p>
+            <div style={styles.content}>
+              <p><strong>Data:</strong> {formatarData(pedido.dataSolicitacao)}</p>
+              <p><strong>Valor:</strong> R$ {pedido.valorPrevisto}</p>
+              <p><strong>Observações:</strong> {pedido.observacoes || 'Nenhuma'}</p>
             </div>
-          </div>
-        </div>
-      </main>
-
-      <Footer />
+          </>
+        )}
+      </div>
     </div>
   )
+}
+
+const styles = {
+  overlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(0,0,0,0.5)',
+    backdropFilter: 'blur(4px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 9999,
+  },
+
+  modal: {
+    width: '100%',
+    maxWidth: '500px',
+    background: '#fff',
+    borderRadius: '20px',
+    padding: '30px',
+    boxShadow: '0 30px 80px rgba(0,0,0,0.25)',
+    animation: 'fadeIn 0.2s ease',
+  },
+
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '15px',
+  },
+
+  title: {
+    margin: 0,
+    fontSize: '22px',
+    fontWeight: 800,
+    color: '#1a1a2e',
+  },
+
+  closeBtn: {
+    border: 'none',
+    background: 'transparent',
+    fontSize: '18px',
+    cursor: 'pointer',
+    color: '#6b7280',
+  },
+
+  status: {
+    display: 'inline-block',
+    padding: '6px 12px',
+    borderRadius: '12px',
+    fontSize: '13px',
+    fontWeight: '600',
+    marginBottom: '15px',
+  },
+
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    fontSize: '14px',
+    color: '#374151',
+  },
+
+  loading: {
+    textAlign: 'center',
+    color: '#6b7280',
+  },
 }

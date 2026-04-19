@@ -1,164 +1,119 @@
-import { useEffect, useState } from 'react'
-import { listarPedidosCliente, cancelarPedido } from '../../service/clienteService'
-import { useNavigate } from 'react-router-dom'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
+import { useEffect, useState } from "react";
+import {
+  listarPedidosCliente,
+  cancelarPedido,
+} from "../../service/clienteService";
+import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import DetalhePedidoModal from "./DetalhePedido";
 
 export default function MeusPedidos() {
-  const [pedidos, setPedidos] = useState([])
-  const navigate = useNavigate()
+  const [pedidos, setPedidos] = useState([]);
+  const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem('usuarioLogado'))
-    const clienteId = usuario?.id
+    const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+    const clienteId = usuario?.id;
 
     listarPedidosCliente(clienteId)
-      .then((response) => {
-        setPedidos(response.data)
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar pedidos:', error)
-      })
-  }, [])
+      .then((response) => setPedidos(response.data))
+      .catch((error) => console.error("Erro ao buscar pedidos:", error));
+  }, []);
 
   const handleCancelar = (id) => {
     cancelarPedido(id)
       .then(() => {
-        alert('Pedido cancelado com sucesso!')
+        alert("Pedido cancelado com sucesso!");
         setPedidos((prev) =>
-          prev.map((p) =>
-            p.id === id ? { ...p, status: 'CANCELADO' } : p
-          )
-        )
+          prev.map((p) => (p.id === id ? { ...p, status: "CANCELADO" } : p)),
+        );
       })
-      .catch((error) => {
-        console.error('Erro ao cancelar pedido:', error)
-      })
-  }
+      .catch((error) => console.error("Erro ao cancelar pedido:", error));
+  };
 
   const formatarData = (data) => {
-    return new Date(data).toLocaleDateString('pt-BR')
-  }
+    return new Date(data).toLocaleDateString("pt-BR");
+  };
 
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'APROVADO':
-        return { background: '#dcfce7', color: '#166534' }
-      case 'PENDENTE':
-        return { background: '#fef9c3', color: '#854d0e' }
-      case 'CANCELADO':
-        return { background: '#fee2e2', color: '#991b1b' }
+      case "APROVADO":
+        return { background: "#dcfce7", color: "#166534" };
+      case "PENDENTE":
+        return { background: "#fef3c7", color: "#92400e" };
+      case "CANCELADO":
+        return { background: "#fee2e2", color: "#991b1b" };
       default:
-        return {}
+        return {};
     }
-  }
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={styles.page}>
       <Header />
 
-      <main
-        style={{
-          flex: 1,
-          padding: '40px 16px',
-          background: 'linear-gradient(135deg, #f1f5f9, #e0f2fe)'
-        }}
-      >
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-
-          <button
-            onClick={() => navigate('/home')} // para voltar pra tela anterior, inclui o home  //
-            style={{
-              marginBottom: '20px',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              border: '1px solid #d1d5db',
-              background: '#fff',
-              cursor: 'pointer'
-            }}
-          >
+      <main style={styles.main}>
+        <div style={styles.container}>
+          <button onClick={() => navigate("/home")} style={styles.backBtn}>
             ← Voltar
           </button>
 
-          <h1 style={{ marginBottom: '20px', color: '#185FA5' }}>
-            Meus Pedidos
-          </h1>
+          <h1 style={styles.title}>Meus Pedidos</h1>
+          <p style={styles.subtitle}>Acompanhe e gerencie seus pedidos</p>
 
           {pedidos.length === 0 ? (
-            <p style={{ color: '#6b7280' }}>
-              Nenhum pedido encontrado.
-            </p>
+            <p style={styles.empty}>Você ainda não possui pedidos.</p>
           ) : (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '20px'
-              }}
-            >
+            <div style={styles.grid}>
               {pedidos.map((pedido) => (
                 <div
                   key={pedido.id}
-                  onClick={() => navigate(`/cliente/pedidos/${pedido.id}`)}
-                  style={{
-                    background: '#fff',
-                    padding: '20px',
-                    borderRadius: '16px',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
-                    cursor: 'pointer',
-                    transition: '0.2s'
-                  }}
+                  onClick={() => setPedidoSelecionado(pedido.id)} // ✅ abre modal
+                  style={styles.card}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = 'translateY(-4px)')
+                    (e.currentTarget.style.transform = "translateY(-6px)")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = 'translateY(0)')
+                    (e.currentTarget.style.transform = "translateY(0)")
                   }
                 >
-                  <h4 style={{ marginBottom: '10px' }}>
-                    Pedido #{pedido.id}
-                  </h4>
+                  <div style={styles.cardHeader}>
+                    <h4 style={styles.cardTitle}>Pedido #{pedido.id}</h4>
 
-                  <div
-                    style={{
-                      ...getStatusStyle(pedido.status),
-                      display: 'inline-block',
-                      padding: '4px 10px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      marginBottom: '10px'
-                    }}
-                  >
-                    {pedido.status}
-                  </div>
-
-                  <p style={{ fontSize: '14px', color: '#6b7280' }}>
-                    Data: {formatarData(pedido.dataSolicitacao)}
-                  </p>
-
-                  <p style={{ fontWeight: '600', marginTop: '5px' }}>
-                    R$ {pedido.valorPrevisto}
-                  </p>
-
-                  {pedido.status === 'PENDENTE' && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleCancelar(pedido.id)
-                      }}
+                    <span
                       style={{
-                        marginTop: '12px',
-                        padding: '8px',
-                        width: '100%',
-                        borderRadius: '10px',
-                        border: 'none',
-                        background: '#ef4444',
-                        color: '#fff',
-                        cursor: 'pointer'
+                        ...styles.badge,
+                        ...getStatusStyle(pedido.status),
                       }}
                     >
-                      Cancelar Pedido
+                      {pedido.status}
+                    </span>
+                  </div>
+
+                  <div style={styles.info}>
+                    <p>
+                      <strong>Data:</strong>{" "}
+                      {formatarData(pedido.dataSolicitacao)}
+                    </p>
+
+                    <p style={styles.valor}>
+                      R$ {Number(pedido.valorPrevisto).toFixed(2)}
+                    </p>
+                  </div>
+
+                  {pedido.status === "PENDENTE" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCancelar(pedido.id);
+                      }}
+                      style={styles.cancelBtn}
+                      onMouseEnter={(e) => (e.target.style.opacity = "0.9")}
+                      onMouseLeave={(e) => (e.target.style.opacity = "1")}
+                    >
+                      Cancelar
                     </button>
                   )}
                 </div>
@@ -169,6 +124,126 @@ export default function MeusPedidos() {
       </main>
 
       <Footer />
+
+      
+      {pedidoSelecionado && (
+        <DetalhePedidoModal
+          id={pedidoSelecionado}
+          onClose={() => setPedidoSelecionado(null)}
+        />
+      )}
     </div>
-  )
+  );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "linear-gradient(135deg,#f1f5f9,#e0f2fe)",
+  },
+
+  main: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    padding: "50px 16px",
+  },
+
+  container: {
+    width: "100%",
+    maxWidth: "1000px",
+  },
+
+  backBtn: {
+    marginBottom: "16px",
+    padding: "8px 16px",
+    borderRadius: "20px",
+    border: "1px solid #e5e7eb",
+    background: "#fff",
+    cursor: "pointer",
+    fontSize: "13px",
+  },
+
+  title: {
+    fontSize: "24px",
+    fontWeight: "700",
+    color: "#111827",
+    marginBottom: "4px",
+  },
+
+  subtitle: {
+    fontSize: "14px",
+    color: "#6b7280",
+    marginBottom: "24px",
+  },
+
+  empty: {
+    color: "#6b7280",
+    fontSize: "14px",
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+    gap: "18px",
+  },
+
+  card: {
+    background: "#fff",
+    padding: "18px",
+    borderRadius: "16px",
+    border: "1px solid #e5e7eb",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
+    cursor: "pointer",
+    transition: "0.2s",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  cardTitle: {
+    fontSize: "15px",
+    fontWeight: "600",
+    color: "#111827",
+  },
+
+  badge: {
+    padding: "4px 10px",
+    borderRadius: "10px",
+    fontSize: "11px",
+    fontWeight: "600",
+  },
+
+  info: {
+    fontSize: "13px",
+    color: "#6b7280",
+  },
+
+  valor: {
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "#f97316",
+    marginTop: "6px",
+  },
+
+  cancelBtn: {
+  marginTop: 'auto',
+  padding: '10px',
+  borderRadius: '10px',
+  border: 'none',
+  background: 'linear-gradient(135deg,#ef4444,#dc2626)',
+  color: '#fff',
+  fontWeight: '600',
+  fontSize: '13px',
+  cursor: 'pointer',
+  transition: '0.2s',
+},
+};

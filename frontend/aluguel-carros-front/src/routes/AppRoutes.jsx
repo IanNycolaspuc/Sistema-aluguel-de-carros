@@ -40,9 +40,7 @@ export default function AppRoutes() {
       <Route path="/cliente/pedidos" element={
         <ProtectedRoute tipoPermitido="CLIENTE"><MeusPedidos /></ProtectedRoute>
       } />
-      <Route path="/cliente/pedidos/:id" element={
-        <ProtectedRoute tipoPermitido="CLIENTE"><DetalhePedido /></ProtectedRoute>
-      } />
+      
 
       {/* Rotas do Agente */}
       <Route path="/agente/dashboard" element={
