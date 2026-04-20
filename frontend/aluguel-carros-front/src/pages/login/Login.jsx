@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../service/authService";
+import logoCielAzul from "../../assets/logo-ciel-azul.png"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export default function Login() {
 
       <div style={styles.card}>
         
-        <h1 style={styles.logo}>logo CIEL Cars</h1>
+        <img src={logoCielAzul} alt="CIEL Cars" style={styles.logoImg} />
         <p style={styles.subtitle}>Acesse sua conta</p>
 
         <form onSubmit={handleLogin} style={styles.form}>
@@ -181,4 +182,9 @@ const styles = {
     fontWeight: "700",
     cursor: "pointer",
   },
+  logoImg: {
+  height: "80px",
+  objectFit: "contain",
+  cursor: "pointer"
+},
 };

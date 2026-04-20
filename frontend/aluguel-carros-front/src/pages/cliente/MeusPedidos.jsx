@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import {
-  listarPedidosCliente,
-  cancelarPedido,
-} from "../../service/clienteService";
+import axios from "axios";
+import { listarPedidosCliente } from "../../service/clienteService";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import DetalhePedidoModal from "./DetalhePedido";
+import AlertMessage from "../../components/AlertMessage";
 
 export default function MeusPedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+  const [alert, setAlert] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,18 +24,40 @@ export default function MeusPedidos() {
 
     listarPedidosCliente(clienteId)
       .then((response) => setPedidos(response.data))
-      .catch((error) => console.error("Erro ao buscar pedidos:", error));
+      .catch(() =>
+        setAlert({
+          show: true,
+          type: "error",
+          message: "Erro ao buscar pedidos",
+        })
+      );
   }, []);
 
-  const handleCancelar = (id) => {
-    cancelarPedido(id)
-      .then(() => {
-        alert("Pedido cancelado com sucesso!");
-        setPedidos((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, status: "CANCELADO" } : p)),
-        );
-      })
-      .catch((error) => console.error("Erro ao cancelar pedido:", error));
+  const handleCancelar = async (id) => {
+    try {
+      await axios.put(`http://localhost:8080/pedidos/${id}/cancelar`);
+
+      setPedidos((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, status: "CANCELADO" } : p
+        )
+      );
+
+      setAlert({
+        show: true,
+        type: "success",
+        message: "Pedido cancelado com sucesso!",
+      });
+
+    } catch (error) {
+      console.error(error);
+
+      setAlert({
+        show: true,
+        type: "error",
+        message: "Erro ao cancelar pedido",
+      });
+    }
   };
 
   const formatarData = (data) => {
@@ -54,6 +81,15 @@ export default function MeusPedidos() {
     <div style={styles.page}>
       <Header />
 
+      {/* 🔥 ALERT TOAST */}
+      {alert.show && (
+        <AlertMessage
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
+
       <main style={styles.main}>
         <div style={styles.container}>
           <button onClick={() => navigate("/home")} style={styles.backBtn}>
@@ -70,7 +106,7 @@ export default function MeusPedidos() {
               {pedidos.map((pedido) => (
                 <div
                   key={pedido.id}
-                  onClick={() => setPedidoSelecionado(pedido.id)} // ✅ abre modal
+                  onClick={() => setPedidoSelecionado(pedido.id)}
                   style={styles.card}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.transform = "translateY(-6px)")
@@ -110,8 +146,6 @@ export default function MeusPedidos() {
                         handleCancelar(pedido.id);
                       }}
                       style={styles.cancelBtn}
-                      onMouseEnter={(e) => (e.target.style.opacity = "0.9")}
-                      onMouseLeave={(e) => (e.target.style.opacity = "1")}
                     >
                       Cancelar
                     </button>
@@ -125,7 +159,6 @@ export default function MeusPedidos() {
 
       <Footer />
 
-      
       {pedidoSelecionado && (
         <DetalhePedidoModal
           id={pedidoSelecionado}

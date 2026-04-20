@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px 14px",
-  borderRadius: "12px",
-  border: "1px solid #d1d5db",
-  fontSize: "14px",
-  outline: "none",
-  transition: "all 0.2s ease",
-  boxSizing: "border-box",
-};
+import { useNavigate } from "react-router-dom";
+import AlertMessage from "../../components/AlertMessage";
 
 const PedidoAluguelForm = ({ automovelId }) => {
   const [cliente, setCliente] = useState(null);
@@ -25,6 +16,13 @@ const PedidoAluguelForm = ({ automovelId }) => {
   const [valorTotal, setValorTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const [alert, setAlert] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+
+  const navigate = useNavigate();
   const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
   useEffect(() => {
@@ -37,28 +35,22 @@ const PedidoAluguelForm = ({ automovelId }) => {
   }, [form.dataFimPretendida, carro]);
 
   const buscarCliente = async (id) => {
-    try {
-      const res = await axios.get(`http://localhost:8080/clientes/${id}`);
-      setCliente(res.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await axios.get(`http://localhost:8080/clientes/${id}`);
+    setCliente(res.data);
   };
 
   const buscarCarro = async (id) => {
-    try {
-      const res = await axios.get(`http://localhost:8080/automoveis/${id}`);
-      setCarro(res.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await axios.get(`http://localhost:8080/automoveis/${id}`);
+    setCarro(res.data);
   };
 
   const calcularValores = () => {
     if (!form.dataFimPretendida || !carro) return;
+
     const hoje = new Date();
     const dataFim = new Date(form.dataFimPretendida);
     const dias = Math.ceil((dataFim - hoje) / (1000 * 60 * 60 * 24));
+
     if (dias > 0) {
       setQuantidadeDias(dias);
       setValorTotal(dias * carro.valorDiaria);
@@ -68,101 +60,93 @@ const PedidoAluguelForm = ({ automovelId }) => {
     }
   };
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const payload = {
-      clienteId: cliente.id,
-      automovelId,
-      quantidadeDias,
-      observacoes: form.observacoes,
-    };
+
     try {
-      await axios.post("http://localhost:8080/pedidos", payload);
-      alert("Pedido criado com sucesso!");
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao criar pedido");
+      await axios.post("http://localhost:8080/pedidos", {
+        clienteId: cliente.id,
+        automovelId,
+        quantidadeDias,
+        observacoes: form.observacoes,
+      });
+
+      setAlert({
+        show: true,
+        type: "success",
+        message: "Pedido criado com sucesso, confira em Meus Pedidos!",
+      });
+
+      // redireciona após 2s
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+
+    } catch {
+      setAlert({
+        show: true,
+        type: "error",
+        message: "Erro ao criar pedido",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  if (!cliente || !carro) return (
-    <p style={{ textAlign: "center", color: "#185FA5", fontSize: "14px" }}>Carregando...</p>
-  );
+  if (!cliente || !carro) return <p>Carregando...</p>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <>
+      {/* ALERT GLOBAL (top-right) */}
+      {alert.show && (
+        <AlertMessage
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
 
-      {/* Dados do cliente */}
-      <div style={{
-        padding: "14px",
-        borderRadius: "12px",
-        border: "1px solid #d1d5db",
-        display: "flex",
-        flexDirection: "column",
-        gap: "4px",
-      }}>
-        <span style={{ fontSize: "12px", color: "#185FA5", fontWeight: 600, marginBottom: "4px" }}>
-          Seus dados
-        </span>
-        <span style={{ fontSize: "14px", fontWeight: 600, color: "#111827" }}>{cliente.nome}</span>
-        <span style={{ fontSize: "13px", color: "#6b7280" }}>{cliente.email}</span>
-        <span style={{ fontSize: "13px", color: "#6b7280" }}>{cliente.telefone}</span>
-      </div>
+      <form onSubmit={handleSubmit} style={styles.form}>
 
-      {/* Formulário */}
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <label style={{ fontSize: "13px", color: "#6b7280", fontWeight: 500 }}>Data fim</label>
-          <input
-            type="date"
-            name="dataFimPretendida"
-            value={form.dataFimPretendida}
-            onChange={handleChange}
-            style={inputStyle}
-            required
-          />
+        <div style={styles.box}>
+          <span style={styles.sectionLabel}>Seus dados</span>
+          <strong>{cliente.nome}</strong>
+          <span>{cliente.email}</span>
+          <span>{cliente.telefone}</span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <label style={{ fontSize: "13px", color: "#6b7280", fontWeight: 500 }}>Observações</label>
-          <textarea
-            name="observacoes"
-            value={form.observacoes}
-            onChange={handleChange}
-            style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }}
-          />
-        </div>
+        <input
+          type="date"
+          name="dataFimPretendida"
+          value={form.dataFimPretendida}
+          onChange={(e) =>
+            setForm({ ...form, dataFimPretendida: e.target.value })
+          }
+          style={styles.input}
+          required
+        />
 
-        {/* Resumo */}
+        <textarea
+          name="observacoes"
+          placeholder="Observações"
+          value={form.observacoes}
+          onChange={(e) =>
+            setForm({ ...form, observacoes: e.target.value })
+          }
+          style={{ ...styles.input, minHeight: "80px" }}
+        />
+
         {quantidadeDias > 0 && (
-          <div style={{
-            padding: "14px",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, #f1f5f9, #e0f2fe)",
-            border: "1px solid #d1d5db",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              <span style={{ fontSize: "12px", color: "#6b7280" }}>Quantidade de dias</span>
-              <span style={{ fontSize: "20px", fontWeight: 700, color: "#111827" }}>
-                {quantidadeDias}d
-              </span>
+          <div style={styles.resumo}>
+            <div>
+              <span style={styles.resumoLabel}>Dias: </span>
+              <strong>{quantidadeDias}</strong>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", textAlign: "right" }}>
-              <span style={{ fontSize: "12px", color: "#6b7280" }}>Total estimado</span>
-              <span style={{ fontSize: "20px", fontWeight: 700, color: "#185FA5" }}>
-                R$ {valorTotal.toFixed(2)}
-              </span>
+
+            <div style={{ textAlign: "right" }}>
+              <span style={styles.resumoLabel}>Total: </span>
+              <strong>R$ {valorTotal.toFixed(2)}</strong>
             </div>
           </div>
         )}
@@ -170,24 +154,68 @@ const PedidoAluguelForm = ({ automovelId }) => {
         <button
           type="submit"
           disabled={loading || quantidadeDias <= 0}
-          style={{
-            marginTop: "4px",
-            padding: "12px",
-            background: loading || quantidadeDias <= 0 ? "#e5e7eb" : "#185FA5",
-            color: loading || quantidadeDias <= 0 ? "#9ca3af" : "#fff",
-            border: "none",
-            borderRadius: "12px",
-            fontWeight: 600,
-            fontSize: "14px",
-            cursor: loading || quantidadeDias <= 0 ? "not-allowed" : "pointer",
-            transition: "0.2s",
-          }}
+          style={styles.button}
         >
           {loading ? "Enviando..." : "Confirmar Pedido"}
         </button>
+
       </form>
-    </div>
+    </>
   );
 };
 
 export default PedidoAluguelForm;
+
+const styles = {
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+
+  input: {
+    padding: "12px 14px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    fontSize: "14px",
+  },
+
+  box: {
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+  },
+
+  sectionLabel: {
+    fontSize: "12px",
+    fontWeight: 700,
+    color: "#f59e0b",
+  },
+
+  resumo: {
+    padding: "12px",
+    borderRadius: "10px",
+    background: "#f1f5f9",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+
+  resumoLabel: {
+    fontSize: "12px",
+    color: "#6b7280",
+  },
+
+  button: {
+    marginTop: "8px",
+    padding: "14px",
+    borderRadius: "12px",
+    border: "none",
+    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    color: "#1a1a2e",
+    fontWeight: 800,
+    cursor: "pointer",
+  },
+};

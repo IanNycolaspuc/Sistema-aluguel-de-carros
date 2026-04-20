@@ -10,118 +10,51 @@ export default function PedidoAluguelPage() {
   const carro = location.state?.automovelSelecionado;
 
   if (!carro) {
-    return <p style={{ textAlign: "center", padding: "40px", color: "#6b7280" }}>Carro não selecionado</p>;
+    return (
+      <p style={{ textAlign: "center", padding: "40px", color: "#6b7280" }}>
+        Carro não selecionado
+      </p>
+    );
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f9fafb" }}>
+    <div style={styles.page}>
       <Header />
 
-      <main style={{
-        flex: 1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        padding: "40px 16px",
-        background: "linear-gradient(135deg, #f1f5f9, #e0f2fe)",
-      }}>
-        <div style={{
-          width: "100%",
-          maxWidth: "900px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "24px",
-        }}>
+      <main style={styles.main}>
+        <div style={styles.container}>
 
           {/* Card do carro */}
-          <div style={{
-            background: "#fff",
-            borderRadius: "16px",
-            border: "1px solid #e5e7eb",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-          }}>
-            <div style={{
-              height: "160px",
-              background: "linear-gradient(135deg, #e0f2fe, #f1f5f9)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "64px",
-            }}>
-              🚗
-            </div>
+          <div style={styles.card}>
+            <div style={styles.carImage}>🚗</div>
 
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "8px" }}>
-              <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#111827" }}>
+            <div style={styles.cardContent}>
+              <h2 style={styles.carTitle}>
                 {carro.marca} {carro.modelo}
               </h2>
 
-              <p style={{ color: "#9ca3af", fontSize: "13px" }}>
+              <p style={styles.carInfo}>
                 {carro.ano} • {carro.placa}
               </p>
 
-              <div style={{
-                marginTop: "8px",
-                padding: "12px 14px",
-                background: "linear-gradient(135deg, #f1f5f9, #e0f2fe)",
-                borderRadius: "12px",
-                fontSize: "13px",
-                color: "#374151",
-              }}>
-                <span style={{ color: "#6b7280" }}>Matrícula: </span>
-                <strong>{carro.matricula}</strong>
+              <div style={styles.badge}>
+                Matrícula: <strong>{carro.matricula}</strong>
               </div>
 
-              <div style={{
-                padding: "12px 14px",
-                background: "#185FA5",
-                borderRadius: "12px",
-                color: "#fff",
-                fontSize: "20px",
-                fontWeight: 700,
-                textAlign: "center",
-              }}>
+              <div style={styles.price}>
                 R$ {Number(carro.valorDiaria).toFixed(2)}
-                <span style={{ fontSize: "13px", fontWeight: 400, opacity: 0.85 }}> / dia</span>
+                <span style={styles.priceSmall}> / dia</span>
               </div>
             </div>
           </div>
 
           {/* Formulário */}
-          <div style={{
-            background: "#fff",
-            borderRadius: "16px",
-            border: "1px solid #e5e7eb",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-            padding: "24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-          }}>
-            <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#185FA5", margin: 0 }}>
-              Finalizar Pedido
-            </h2>
+          <div style={styles.card}>
+            <h2 style={styles.title}>Finalizar Pedido</h2>
 
             <PedidoAluguelForm automovelId={carro.id} />
 
-            <button
-              onClick={() => navigate(-1)}
-              style={{
-                width: "100%",
-                padding: "11px",
-                borderRadius: "12px",
-                border: "1px solid #d1d5db",
-                background: "#fff",
-                color: "#374151",
-                fontWeight: 600,
-                fontSize: "14px",
-                cursor: "pointer",
-                transition: "0.2s",
-              }}
-            >
+            <button onClick={() => navigate(-1)} style={styles.secondaryButton}>
               Voltar
             </button>
           </div>
@@ -133,3 +66,103 @@ export default function PedidoAluguelPage() {
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "#f9fafb",
+  },
+
+  main: {
+    flex: 1,
+    padding: "40px 20px",
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  container: {
+    width: "100%",
+    maxWidth: "1000px",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "24px",
+  },
+
+  card: {
+    background: "#fff",
+    borderRadius: "20px",
+    padding: "24px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+
+  title: {
+    margin: 0,
+    fontSize: "20px",
+    fontWeight: 800,
+    color: "#1a1a2e",
+  },
+
+  carImage: {
+    height: "140px",
+    borderRadius: "12px",
+    background: "#f1f5f9",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "60px",
+  },
+
+  cardContent: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
+
+  carTitle: {
+    fontSize: "18px",
+    fontWeight: 700,
+    color: "#1a1a2e",
+  },
+
+  carInfo: {
+    fontSize: "13px",
+    color: "#6b7280",
+  },
+
+  badge: {
+    padding: "10px",
+    borderRadius: "10px",
+    background: "#f1f5f9",
+    fontSize: "13px",
+  },
+
+  price: {
+    padding: "12px",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    color: "#1a1a2e",
+    fontWeight: 800,
+    textAlign: "center",
+    fontSize: "18px",
+  },
+
+  priceSmall: {
+    fontSize: "12px",
+    marginLeft: "4px",
+  },
+
+  secondaryButton: {
+    marginTop: "10px",
+    padding: "12px",
+    borderRadius: "12px",
+    border: "1px solid #e5e7eb",
+    background: "#fff",
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+};

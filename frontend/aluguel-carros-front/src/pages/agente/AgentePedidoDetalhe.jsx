@@ -1,155 +1,286 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { buscarPedido, aprovarPedido, rejeitarPedido } from '../../service/agenteService'
-import StatusBadge from '../../components/StatusBadge'
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  buscarPedido,
+  aprovarPedido,
+  rejeitarPedido,
+} from "../../service/agenteService";
+import StatusBadge from "../../components/StatusBadge";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import AlertMensagem from "../../components/AlertMessage";
 
 export default function AgentePedidoDetalhe() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const usuario = JSON.parse(localStorage.getItem('usuarioLogado'))
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-  const [pedido, setPedido] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [mensagem, setMensagem] = useState(null) // { tipo: 'success'|'danger', texto }
-  const [processando, setProcessando] = useState(false)
+  const [pedido, setPedido] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [mensagem, setMensagem] = useState(null);
+  const [processando, setProcessando] = useState(false);
 
   useEffect(() => {
-    carregarPedido()
-  }, [id])
+    carregarPedido();
+  }, [id]);
 
   function carregarPedido() {
-    setLoading(true)
+    setLoading(true);
     buscarPedido(id)
       .then((res) => setPedido(res.data))
-      .catch((err) => console.error('Erro ao buscar pedido:', err))
-      .finally(() => setLoading(false))
+      .catch(() => setMensagem({ tipo: "error", texto: "Erro ao carregar pedido" }))
+      .finally(() => setLoading(false));
   }
 
   async function handleAprovar() {
-    setProcessando(true)
+    setProcessando(true);
     try {
-      await aprovarPedido(id, usuario.id)
-      setMensagem({ tipo: 'success', texto: 'Pedido aprovado com sucesso!' })
-      carregarPedido()
-    } catch (err) {
-      setMensagem({ tipo: 'danger', texto: 'Erro ao aprovar pedido.' })
+      await aprovarPedido(id, usuario.id);
+      setMensagem({ tipo: "success", texto: "Pedido aprovado com sucesso!" });
+      carregarPedido();
+    } catch {
+      setMensagem({ tipo: "error", texto: "Erro ao aprovar pedido." });
     } finally {
-      setProcessando(false)
+      setProcessando(false);
     }
   }
 
   async function handleRejeitar() {
-    setProcessando(true)
+    setProcessando(true);
     try {
-      await rejeitarPedido(id, usuario.id)
-      setMensagem({ tipo: 'success', texto: 'Pedido rejeitado.' })
-      carregarPedido()
-    } catch (err) {
-      setMensagem({ tipo: 'danger', texto: 'Erro ao rejeitar pedido.' })
+      await rejeitarPedido(id, usuario.id);
+      setMensagem({ tipo: "warning", texto: "Pedido rejeitado." });
+      carregarPedido();
+    } catch {
+      setMensagem({ tipo: "error", texto: "Erro ao rejeitar pedido." });
     } finally {
-      setProcessando(false)
+      setProcessando(false);
     }
   }
 
   const formatarData = (data) =>
-    data ? new Date(data).toLocaleDateString('pt-BR') : '—'
+    data ? new Date(data).toLocaleDateString("pt-BR") : "—";
 
   return (
-    <div className="min-vh-100 bg-light">
-      <nav className="navbar navbar-dark bg-dark px-4">
-        <span className="navbar-brand fw-bold">🚗 CarRental — Agente</span>
-      </nav>
+    <div style={styles.page}>
+      <Header />
 
-      <div className="container py-4" style={{ maxWidth: '640px' }}>
-        <div className="d-flex align-items-center gap-3 mb-4">
+      <main style={styles.main}>
+        <div style={styles.container}>
+
+          {/* BOTÃO VOLTAR */}
           <button
-            className="btn btn-outline-secondary btn-sm"
-            onClick={() => navigate('/agente/pedidos')}
+            onClick={() => navigate("/agente/pedidos")}
+            style={styles.backBtn}
           >
             ← Voltar
           </button>
-          <h4 className="mb-0">Detalhe do Pedido</h4>
-        </div>
 
-        {loading ? (
-          <div className="text-center py-5">
-            <div className="spinner-border text-secondary" role="status" />
-          </div>
-        ) : !pedido ? (
-          <p className="text-danger">Pedido não encontrado.</p>
-        ) : (
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <div className="d-flex justify-content-between align-items-start mb-3">
-                <h5 className="card-title mb-0">Pedido #{pedido.id}</h5>
+          {/* LOADING */}
+          {loading ? (
+            <p style={styles.loading}>Carregando pedido...</p>
+          ) : !pedido ? (
+            <p style={styles.error}>Pedido não encontrado.</p>
+          ) : (
+            <div style={styles.card}>
+              
+              {/* HEADER DO CARD */}
+              <div style={styles.cardHeader}>
+                <h2 style={styles.title}>Pedido #{pedido.id}</h2>
                 <StatusBadge status={pedido.status} />
               </div>
 
-              <table className="table table-sm table-borderless mb-3">
-                <tbody>
-                  <tr>
-                    <th className="text-muted" style={{ width: '45%' }}>Cliente ID</th>
-                    <td>{pedido.clienteId}</td>
-                  </tr>
-                  <tr>
-                    <th className="text-muted">Automóvel ID</th>
-                    <td>{pedido.automovelId}</td>
-                  </tr>
-                  <tr>
-                    <th className="text-muted">Data de Solicitação</th>
-                    <td>{formatarData(pedido.dataSolicitacao)}</td>
-                  </tr>
-                  <tr>
-                    <th className="text-muted">Data Fim Pretendida</th>
-                    <td>{formatarData(pedido.dataFimPretendida)}</td>
-                  </tr>
-                  <tr>
-                    <th className="text-muted">Valor Previsto</th>
-                    <td>{pedido.valorPrevisto != null ? `R$ ${pedido.valorPrevisto}` : '—'}</td>
-                  </tr>
-                  <tr>
-                    <th className="text-muted">Observações</th>
-                    <td>{pedido.observacoes || 'Nenhuma'}</td>
-                  </tr>
-                  {pedido.agenteId && (
-                    <tr>
-                      <th className="text-muted">Agente Responsável (ID)</th>
-                      <td>{pedido.agenteId}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+              {/* INFOS */}
+              <div style={styles.infoGrid}>
+                <Info label="Cliente ID" value={pedido.clienteId} />
+                <Info label="Automóvel ID" value={pedido.automovelId} />
+                <Info label="Data Solicitação" value={formatarData(pedido.dataSolicitacao)} />
+                <Info label="Data Fim" value={formatarData(pedido.dataFimPretendida)} />
+                <Info
+                  label="Valor"
+                  value={
+                    pedido.valorPrevisto != null
+                      ? `R$ ${pedido.valorPrevisto}`
+                      : "—"
+                  }
+                />
+                <Info
+                  label="Observações"
+                  value={pedido.observacoes || "Nenhuma"}
+                />
 
-              {/* Mensagem de feedback */}
-              {mensagem && (
-                <div className={`alert alert-${mensagem.tipo} py-2`}>
-                  {mensagem.texto}
-                </div>
-              )}
+                {pedido.agenteId && (
+                  <Info label="Agente ID" value={pedido.agenteId} />
+                )}
+              </div>
 
-              {/* Botões de ação — só aparecem se PENDENTE */}
-              {pedido.status === 'PENDENTE' && (
-                <div className="d-flex gap-2 mt-2">
+              {/* AÇÕES */}
+              {pedido.status === "PENDENTE" && (
+                <div style={styles.actions}>
                   <button
-                    className="btn btn-success"
                     onClick={handleAprovar}
                     disabled={processando}
+                    style={styles.aprovarBtn}
                   >
-                    {processando ? 'Processando...' : '✓ Aprovar'}
+                    {processando ? "Processando..." : "✓ Aprovar"}
                   </button>
+
                   <button
-                    className="btn btn-danger"
                     onClick={handleRejeitar}
                     disabled={processando}
+                    style={styles.rejeitarBtn}
                   >
-                    {processando ? 'Processando...' : '✗ Rejeitar'}
+                    {processando ? "Processando..." : "✗ Rejeitar"}
                   </button>
                 </div>
               )}
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </main>
+
+      <Footer />
+
+      {/* ALERT GLOBAL */}
+      {mensagem && (
+        <AlertMensagem
+          type={mensagem.tipo}
+          message={mensagem.texto}
+          onClose={() => setMensagem(null)}
+        />
+      )}
     </div>
-  )
+  );
 }
+
+/* COMPONENTE AUXILIAR */
+function Info({ label, value }) {
+  return (
+    <div style={styles.infoBox}>
+      <span style={styles.infoLabel}>{label}</span>
+      <strong style={styles.infoValue}>{value}</strong>
+    </div>
+  );
+}
+
+/* STYLES */
+const styles = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "#f9fafb",
+  },
+
+  main: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    padding: "40px 20px",
+    background: "linear-gradient(135deg,#f1f5f9,#e0f2fe)",
+  },
+
+  container: {
+    width: "100%",
+    maxWidth: "700px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  },
+
+  backBtn: {
+    padding: "8px 14px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    background: "#fff",
+    cursor: "pointer",
+    fontWeight: 600,
+    alignSelf: "flex-start",
+  },
+
+  loading: {
+    textAlign: "center",
+    color: "#6b7280",
+  },
+
+  error: {
+    textAlign: "center",
+    color: "#ef4444",
+  },
+
+  card: {
+    background: "#fff",
+    padding: "24px",
+    borderRadius: "16px",
+    border: "1px solid #e5e7eb",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  },
+
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  title: {
+    fontSize: "20px",
+    fontWeight: 800,
+    color: "#1a1a2e",
+    margin: 0,
+  },
+
+  infoGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "12px",
+  },
+
+  infoBox: {
+    background: "#f9fafb",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    display: "flex",
+    flexDirection: "column",
+  },
+
+  infoLabel: {
+    fontSize: "12px",
+    color: "#6b7280",
+  },
+
+  infoValue: {
+    fontSize: "14px",
+    color: "#111827",
+  },
+
+  actions: {
+    display: "flex",
+    gap: "12px",
+  },
+
+  aprovarBtn: {
+    flex: 1,
+    padding: "12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "linear-gradient(135deg,#22c55e,#16a34a)",
+    color: "#fff",
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+
+  rejeitarBtn: {
+    flex: 1,
+    padding: "12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "linear-gradient(135deg,#ef4444,#dc2626)",
+    color: "#fff",
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+};

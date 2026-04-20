@@ -54,68 +54,22 @@ export default function ContatoEmail() {
     setLoading(false);
   }
 
-  const inputStyle = {
-    padding: "12px 14px",
-    borderRadius: "12px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    outline: "none",
-    transition: "0.2s",
-  };
-
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
-      {/* HEADER */}
+    <div style={styles.page}>
       <Header />
 
-      {/* CONTEÚDO */}
-      <main
-        style={{
-          flex: 1,
-          background: "linear-gradient(135deg, #0f172a, #185FA5)",
-          padding: "60px 20px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "700px",
-            background: "#fff",
-            padding: "30px",
-            borderRadius: "16px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-          }}
-        >
-          <h2
-            style={{
-              marginBottom: "20px",
-              color: "#185FA5",
-              textAlign: "center",
-            }}
-          >
-            Fale com a CIEL Cars
-          </h2>
+      <main style={styles.main}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>Fale com a CIEL Cars</h2>
+          <p style={styles.subtitle}>
+            Envie uma mensagem e responderemos o mais rápido possível
+          </p>
 
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-            }}
-          >
-            <div style={{ display: "flex", gap: "10px" }}>
+          <form onSubmit={handleSubmit} style={styles.form}>
+
+            <div style={styles.grid}>
               <input
-                style={{ ...inputStyle, flex: 1 }}
+                style={styles.input}
                 type="text"
                 name="nome"
                 placeholder="Seu nome"
@@ -125,7 +79,7 @@ export default function ContatoEmail() {
               />
 
               <input
-                style={{ ...inputStyle, flex: 1 }}
+                style={styles.input}
                 type="email"
                 name="email"
                 placeholder="Seu email"
@@ -136,7 +90,7 @@ export default function ContatoEmail() {
             </div>
 
             <input
-              style={inputStyle}
+              style={styles.input}
               type="tel"
               name="telefone"
               placeholder="Telefone (opcional)"
@@ -145,7 +99,7 @@ export default function ContatoEmail() {
             />
 
             <textarea
-              style={{ ...inputStyle, minHeight: "120px", resize: "none" }}
+              style={{ ...styles.input, minHeight: "120px" }}
               name="mensagem"
               placeholder="Digite sua mensagem..."
               value={form.mensagem}
@@ -153,39 +107,112 @@ export default function ContatoEmail() {
               required
             />
 
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                padding: "12px",
-                borderRadius: "12px",
-                border: "none",
-                background: "#185FA5",
-                color: "#fff",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
-            >
+            <button type="submit" disabled={loading} style={styles.button}>
               {loading ? "Enviando..." : "Enviar mensagem"}
             </button>
 
             {status && (
-              <p
+              <div
                 style={{
-                  marginTop: "10px",
-                  textAlign: "center",
-                  color: status.includes("sucesso") ? "green" : "red",
+                  ...styles.status,
+                  background: status.includes("sucesso")
+                    ? "#dcfce7"
+                    : "#fee2e2",
+                  color: status.includes("sucesso")
+                    ? "#166534"
+                    : "#b91c1c",
                 }}
               >
                 {status}
-              </p>
+              </div>
             )}
           </form>
         </div>
       </main>
 
-      {/* FOOTER */}
       <Footer />
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    background: "#f9fafb",
+  },
+
+  main: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "60px 20px",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: "700px",
+    background: "#fff",
+    padding: "40px",
+    borderRadius: "20px",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+  },
+
+  title: {
+    margin: 0,
+    fontSize: "24px",
+    fontWeight: 800,
+    color: "#1a1a2e",
+    textAlign: "center",
+  },
+
+  subtitle: {
+    textAlign: "center",
+    fontSize: "14px",
+    color: "#6b7280",
+    marginBottom: "20px",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "14px",
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "12px",
+  },
+
+  input: {
+    padding: "12px 14px",
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    fontSize: "14px",
+    outline: "none",
+  },
+
+  button: {
+    marginTop: "10px",
+    padding: "14px",
+    borderRadius: "12px",
+    border: "none",
+    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    color: "#1a1a2e",
+    fontWeight: 800,
+    cursor: "pointer",
+    fontSize: "15px",
+    boxShadow: "0 10px 25px rgba(245,158,11,0.35)",
+  },
+
+  status: {
+    marginTop: "10px",
+    padding: "10px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    textAlign: "center",
+  },
+};
