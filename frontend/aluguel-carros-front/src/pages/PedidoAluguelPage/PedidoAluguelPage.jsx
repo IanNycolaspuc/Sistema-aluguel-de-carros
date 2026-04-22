@@ -24,31 +24,46 @@ export default function PedidoAluguelPage() {
       <main style={styles.main}>
         <div style={styles.container}>
 
-          {/* Card do carro */}
+          {/* CARD DO CARRO */}
           <div style={styles.card}>
-            <div style={styles.carImage}>🚗</div>
+            <div style={styles.carImage}>
+              <img
+                src={`https://luizfagundest.github.io/imagens/${carro.marca.replace(/\s+/g, "-")}-${carro.modelo.replace(/\s+/g, "-")}-${carro.ano}.png`}
+                alt={`${carro.marca} ${carro.modelo}`}
+                style={styles.img}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "flex";
+                }}
+              />
+              <div style={styles.fallback}>🚗</div>
+            </div>
 
             <div style={styles.cardContent}>
-              <h2 style={styles.carTitle}>
-                {carro.marca} {carro.modelo}
-              </h2>
-
-              <p style={styles.carInfo}>
-                {carro.ano} • {carro.placa}
-              </p>
-
-              <div style={styles.badge}>
-                Matrícula: <strong>{carro.matricula}</strong>
+              <div>
+                <h2 style={styles.carTitle}>
+                  {carro.marca} {carro.modelo}
+                </h2>
+                <p style={styles.carInfo}>
+                  {carro.ano} • {carro.placa}
+                </p>
               </div>
 
-              <div style={styles.price}>
-                R$ {Number(carro.valorDiaria).toFixed(2)}
-                <span style={styles.priceSmall}> / dia</span>
+              <div style={styles.infoRow}>
+                <span style={styles.label}>Matrícula</span>
+                <span style={styles.value}>{carro.matricula}</span>
+              </div>
+
+              <div style={styles.priceBox}>
+                <span style={styles.priceValue}>
+                  R$ {Number(carro.valorDiaria).toFixed(2)}
+                </span>
+                <span style={styles.pricePerDay}>/ dia</span>
               </div>
             </div>
           </div>
 
-          {/* Formulário */}
+          {/* FORMULÁRIO */}
           <div style={styles.card}>
             <h2 style={styles.title}>Finalizar Pedido</h2>
 
@@ -93,11 +108,11 @@ const styles = {
   card: {
     background: "#fff",
     borderRadius: "20px",
-    padding: "24px",
-    boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+    padding: "20px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    gap: "18px",
   },
 
   title: {
@@ -107,26 +122,42 @@ const styles = {
     color: "#1a1a2e",
   },
 
-  carImage: {
-    height: "140px",
-    borderRadius: "12px",
-    background: "#f1f5f9",
-    display: "flex",
+carImage: {
+  height: "200px",
+  borderRadius: "16px",
+  background: "#ffffff", // 🔥 fundo branco clean
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  overflow: "hidden"
+},
+
+img: {
+  maxWidth: "90%",
+  maxHeight: "90%",
+  objectFit: "contain",
+  transition: "0.3s ease"
+},
+  fallback: {
+    display: "none",
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "60px",
+    fontSize: "64px",
   },
 
   cardContent: {
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
+    gap: "14px",
   },
 
   carTitle: {
-    fontSize: "18px",
-    fontWeight: 700,
-    color: "#1a1a2e",
+    fontSize: "20px",
+    fontWeight: 800,
+    color: "#111827",
+    margin: 0,
   },
 
   carInfo: {
@@ -134,26 +165,41 @@ const styles = {
     color: "#6b7280",
   },
 
-  badge: {
-    padding: "10px",
+  infoRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 12px",
+    background: "#f9fafb",
     borderRadius: "10px",
-    background: "#f1f5f9",
     fontSize: "13px",
   },
 
-  price: {
-    padding: "12px",
-    borderRadius: "12px",
-    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
-    color: "#1a1a2e",
-    fontWeight: 800,
-    textAlign: "center",
-    fontSize: "18px",
+  label: {
+    color: "#6b7280",
   },
 
-  priceSmall: {
-    fontSize: "12px",
-    marginLeft: "4px",
+  value: {
+    fontWeight: 600,
+    color: "#111827",
+  },
+
+  priceBox: {
+    display: "flex",
+    alignItems: "baseline",
+    gap: "6px",
+    marginTop: "6px",
+  },
+
+  priceValue: {
+    fontSize: "26px",
+    fontWeight: 800,
+    color: "#111827",
+  },
+
+  pricePerDay: {
+    fontSize: "13px",
+    color: "#6b7280",
   },
 
   secondaryButton: {

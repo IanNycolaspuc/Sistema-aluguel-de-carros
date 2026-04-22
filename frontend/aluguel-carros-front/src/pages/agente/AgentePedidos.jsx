@@ -37,21 +37,16 @@ export default function AgentePedidos() {
 
         setPedidos(pedidosRes.data);
 
-        // 🔹 transforma em MAP (id -> objeto)
         const clientesObj = {};
-        clientesRes.data.forEach((c) => {
-          clientesObj[c.id] = c;
-        });
+        clientesRes.data.forEach((c) => (clientesObj[c.id] = c));
 
         const autosObj = {};
-        autosRes.data.forEach((a) => {
-          autosObj[a.id] = a;
-        });
+        autosRes.data.forEach((a) => (autosObj[a.id] = a));
 
         setClientesMap(clientesObj);
         setAutomoveisMap(autosObj);
       } catch (err) {
-        console.error("Erro ao carregar dados:", err);
+        console.error("Erro:", err);
       } finally {
         setLoading(false);
       }
@@ -103,21 +98,18 @@ export default function AgentePedidos() {
             ))}
           </div>
 
-          {/* CONTEÚDO */}
+          {/* TABELA */}
           {loading ? (
-            <p style={styles.loading}>Carregando pedidos...</p>
-          ) : pedidosFiltrados.length === 0 ? (
-            <p style={styles.empty}>Nenhum pedido encontrado.</p>
+            <p style={styles.loading}>Carregando...</p>
           ) : (
             <div style={styles.tableWrapper}>
               <table style={styles.table}>
                 <thead>
-                  <tr>
-                    <th>#</th>
+                  <tr style={styles.thead}>
+                    <th>ID</th>
                     <th>Cliente</th>
                     <th>Automóvel</th>
-                    <th>Data</th>
-                    <th>Fim</th>
+                    <th>Período</th>
                     <th>Valor</th>
                     <th>Status</th>
                     <th></th>
@@ -125,61 +117,62 @@ export default function AgentePedidos() {
                 </thead>
 
                 <tbody>
-                  {pedidosFiltrados.map((p) => {
+                  {pedidosFiltrados.map((p, index) => {
                     const cliente = clientesMap[p.clienteId];
                     const auto = automoveisMap[p.automovelId];
 
                     return (
-                      <tr key={p.id}>
-                        <td>{p.id}</td>
+                      <tr
+                        key={p.id}
+                        style={{
+                          ...styles.row,
+                          background:
+                            index % 2 === 0 ? "#fff" : "#f9fafb",
+                        }}
+                      >
+                        <td style={styles.cell}>{p.id}</td>
 
-                        {/* CLIENTE MELHORADO */}
-                        <td>
-                          {cliente ? (
-                            <div style={styles.clienteBox}>
+                        <td style={styles.cell}>
+                          {cliente && (
+                            <div style={styles.infoBox}>
                               <strong>{cliente.nome}</strong>
-                              <span style={styles.subInfo}>
-                                {cliente.profissao}
-                              </span>
-                              <span style={styles.subInfo}>
-                                {cliente.telefone}
-                              </span>
+                              <span>{cliente.profissao}</span>
+                              <span>{cliente.telefone}</span>
                             </div>
-                          ) : (
-                            "—"
                           )}
                         </td>
 
-                        {/* AUTOMÓVEL MELHORADO */}
-                        <td>
-                          {auto ? (
-                            <div style={styles.autoBox}>
+                        <td style={styles.cell}>
+                          {auto && (
+                            <div style={styles.infoBox}>
                               <strong>
                                 {auto.marca} {auto.modelo}
                               </strong>
-                              <span style={styles.subInfo}>
+                              <span>
                                 {auto.ano} • {auto.placa}
                               </span>
                             </div>
-                          ) : (
-                            "—"
                           )}
                         </td>
 
-                        <td>{formatarData(p.dataSolicitacao)}</td>
-                        <td>{formatarData(p.dataFimPretendida)}</td>
+                        <td style={styles.cell}>
+                          <div style={styles.infoBox}>
+                            <span>{formatarData(p.dataSolicitacao)}</span>
+                            <span>{formatarData(p.dataFimPretendida)}</span>
+                          </div>
+                        </td>
 
-                        <td>
-                          {p.valorPrevisto != null
+                        <td style={styles.cell}>
+                          {p.valorPrevisto
                             ? `R$ ${p.valorPrevisto}`
                             : "—"}
                         </td>
 
-                        <td>
+                        <td style={styles.cell}>
                           <StatusBadge status={p.status} />
                         </td>
 
-                        <td>
+                        <td style={styles.cell}>
                           <button
                             onClick={() =>
                               navigate(`/agente/pedidos/${p.id}`)
@@ -222,7 +215,7 @@ const styles = {
 
   container: {
     width: "100%",
-    maxWidth: "1100px",
+    maxWidth: "1200px",
     display: "flex",
     flexDirection: "column",
     gap: "20px",
@@ -235,19 +228,17 @@ const styles = {
   },
 
   title: {
-    fontSize: "24px",
+    fontSize: "26px",
     fontWeight: 800,
     color: "#1a1a2e",
-    margin: 0,
   },
 
   backBtn: {
     padding: "8px 14px",
-    borderRadius: "10px",
+    borderRadius: "8px",
     border: "1px solid #e5e7eb",
     background: "#fff",
     cursor: "pointer",
-    fontWeight: 600,
   },
 
   filters: {
@@ -262,60 +253,73 @@ const styles = {
     border: "1px solid #e5e7eb",
     background: "#fff",
     cursor: "pointer",
-    fontSize: "13px",
   },
 
   filterActive: {
-    background: "linear-gradient(135deg,#f59e0b,#f97316,#ea580c)",
+    background: "linear-gradient(135deg,#f59e0b,#f97316)",
     border: "none",
     fontWeight: 700,
   },
 
   tableWrapper: {
     background: "#fff",
-    borderRadius: "16px",
+    borderRadius: "12px", // 🔥 menos arredondado
     border: "1px solid #e5e7eb",
     overflow: "hidden",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
   },
 
   table: {
     width: "100%",
-    fontSize: "14px",
+    borderCollapse: "collapse", // 🔥 importante pra linhas
+  },
+
+  thead: {
+    background: "#eef2f7", // 🔥 mais contraste
+  },
+
+  row: {
+    transition: "0.15s",
+  },
+
+  /* 🔥 ZEBRA MAIS FORTE */
+  rowEven: {
+    background: "#ffffff",
+  },
+
+  rowOdd: {
+    background: "#f1f5f9", // 🔥 mais visível que antes
+  },
+
+  cell: {
+    padding: "14px 16px",
+    borderBottom: "1px solid #e5e7eb", // 🔥 linha horizontal
+    borderRight: "1px solid #f1f5f9", // 🔥 linha vertical leve
+    verticalAlign: "top",
+  },
+
+  /* 🔥 REMOVE borda da última coluna */
+  lastCell: {
+    borderRight: "none",
+  },
+
+  infoBox: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "3px",
+    fontSize: "13px",
   },
 
   viewBtn: {
-    padding: "6px 12px",
+    padding: "8px 14px",
     borderRadius: "8px",
     border: "1px solid #e5e7eb",
     background: "#fff",
     cursor: "pointer",
     fontWeight: 600,
-  },
-
-  clienteBox: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "2px",
-  },
-
-  autoBox: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "2px",
-  },
-
-  subInfo: {
-    fontSize: "12px",
-    color: "#6b7280",
+    transition: "0.2s",
   },
 
   loading: {
-    textAlign: "center",
-    color: "#6b7280",
-  },
-
-  empty: {
     textAlign: "center",
     color: "#6b7280",
   },
