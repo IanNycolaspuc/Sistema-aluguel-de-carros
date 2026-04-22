@@ -14,7 +14,7 @@ import PedidoAluguelPage from '../pages/PedidoAluguelPage/PedidoAluguelPage'
 import CadastroCliente from '../pages/cliente/CadastroCliente'
 import ContatoEmail from '../pages/contato/ContatoEmail'
 import Landing from '../pages/landing/Landing' // Add isso
-
+import EditarCliente from '../pages/cliente/EditarCliente'
 
 export default function AppRoutes() {
   return (
@@ -24,6 +24,7 @@ export default function AppRoutes() {
       
       {/* Rota para a página principal do sistema após o portal de entrada */}
       <Route path="/home" element={<Home />} /> 
+      <Route path="/cliente/perfil" element={<EditarCliente />} /> 
       
       {/* Rotas Públicas de Acesso e Suporte */}
       <Route path="/login" element={<Login />} /> 
