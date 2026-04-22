@@ -1,29 +1,45 @@
-# 🚗 Sistema de Aluguel de Carros
+<div align="center">
 
-> **Disciplina:** Laboratório de Desenvolvimento de Software
-> **Curso:** Engenharia de Software — 4º Período
-> **Professor:** João Paulo Carneiro Aramuni
+
+
+<img src="frontend/aluguel-carros-front/src/assets/logo-ciel.png" width="200"/>
+
+<br/>
+
+![Kotlin](https://img.shields.io/badge/Kotlin-purple?style=for-the-badge&logo=kotlin&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
+![Micronaut](https://img.shields.io/badge/Micronaut-000000?style=for-the-badge&logo=micronaut&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+
+</div>
+
+
+> **Nome Do Projeto:** Ciel cars -
+> **Disciplina:** Laboratório de Desenvolvimento de Software - 
+> **Curso:** Engenharia de Software — 4º Período - 
+> **Professor:** João Paulo Carneiro Aramuni 
 
 ---
 
-## 📖 Sobre o Projeto
+##  Sobre o Projeto
 
-Sistema web de aluguel de carros desenvolvido como atividade prática da disciplina de Laboratório de Desenvolvimento de Software da PUC Minas. A plataforma permite que clientes criem, modifiquem e cancelem pedidos de aluguel, enquanto agentes (empresas ou bancos) avaliam financeiramente esses pedidos e aprovam ou reprovam os contratos.
+Sistema web de aluguel de carros desenvolvido como atividade prática da disciplina de Laboratório de Desenvolvimento de Software da PUC Minas. O projeto incial **MVP** preve que plataforma permite que clientes criem e cancelem pedidos de aluguel, enquanto agentes (empresas ou bancos) avaliam financeiramente esses pedidos e aprovam ou reprovam os contratos.
 
 ---
 
-## 🛠️ Tecnologias
+##  Tecnologias
 
 | Camada | Tecnologia |
 |--------|-----------|
 | Frontend | React + Vite |
 | Backend | Java + Micronaut |
-| Banco de Dados | H2 (in-memory) |
+| Banco de Dados | H2 (H2 Database é um banco de dados SQL feito para aplicações Java. Ele é muito usado em desenvolvimento e testes.) |
 | Build | Gradle |
 
 ---
 
-## ▶️ Como Executar
+##  Como Executar
 
 ### Backend
 
@@ -45,7 +61,10 @@ Interface disponível em: `http://localhost:5173`
 
 ---
 
-## 🔌 Endpoints da API
+## 🔌 API e Atores
+
+<details>
+<summary><strong>📡 Endpoints da API</strong></summary>
 
 ### Auth
 | Método | Rota | Descrição |
@@ -87,9 +106,10 @@ Interface disponível em: `http://localhost:5173`
 | PUT | `/pedidos/{id}/rejeitar?agenteId=` | Rejeita um pedido |
 | PUT | `/pedidos/{id}/cancelar` | Cancela um pedido |
 
----
+</details>
 
-## 👥 Atores do Sistema
+<details>
+<summary><strong>👥 Atores do Sistema</strong></summary>
 
 | Ator | Descrição |
 |------|-----------|
@@ -98,11 +118,14 @@ Interface disponível em: `http://localhost:5173`
 | Agente | Empresa ou banco responsável pela avaliação financeira dos pedidos |
 | Sistema | Responsável pelo controle de acessos, registros e regras de negócio |
 
+</details>
+
 ---
 
-## 📋 Histórias de Usuário
+## Histórias de Usuário
 
-### Cadastro e Autenticação
+<details>
+<summary><strong> Cadastro e Autenticação</strong></summary>
 
 #### US01 — Cadastro de Novo Usuário
 > *Como um **visitante**, eu quero **me cadastrar no sistema**, para que **eu possa acessar as funcionalidades de aluguel de automóveis**.*
@@ -122,9 +145,10 @@ Interface disponível em: `http://localhost:5173`
 - [ ] O sistema deve exibir mensagem de erro em caso de credenciais inválidas
 - [ ] Após login bem-sucedido, o usuário deve ser redirecionado para a área do seu perfil
 
----
+</details>
 
-### Pedidos de Aluguel (Cliente)
+<details>
+<summary><strong> Pedidos de Aluguel (Cliente)</strong></summary>
 
 #### US03 — Criar Pedido de Aluguel
 > *Como um **cliente**, eu quero **criar um novo pedido de aluguel**, para que **eu possa solicitar um automóvel disponível no sistema**.*
@@ -156,9 +180,10 @@ Interface disponível em: `http://localhost:5173`
 - [ ] Após o cancelamento, o status do pedido deve ser alterado para "Cancelado"
 - [ ] O automóvel vinculado deve retornar à listagem de disponíveis
 
----
+</details>
 
-### Avaliação de Pedidos (Agente)
+<details>
+<summary><strong> Avaliação de Pedidos (Agente)</strong></summary>
 
 #### US07 — Visualizar Pedidos para Avaliação
 > *Como um **agente**, eu quero **visualizar os pedidos submetidos**, para que **eu possa analisá-los do ponto de vista financeiro**.*
@@ -175,9 +200,10 @@ Interface disponível em: `http://localhost:5173`
 - [ ] Em caso de reprovação, o pedido deve ser atualizado para "Reprovado"
 - [ ] O agente pode adicionar observações ou justificativas ao parecer
 
----
+</details>
 
-### Automóveis e Contratos
+<details>
+<summary><strong> Automóveis e Contratos</strong></summary>
 
 #### US10 — Registrar Automóvel
 > *Como um **agente**, eu quero **registrar um automóvel no sistema**, para que **ele fique disponível para aluguel pelos clientes**.*
@@ -191,9 +217,11 @@ Interface disponível em: `http://localhost:5173`
 - [ ] O sistema deve registrar os dados do contrato vinculado ao pedido de aluguel
 - [ ] Um pedido pode ter no máximo um contrato de crédito associado
 
+</details>
+
 ---
 
-## 📊 Resumo das Histórias
+##  Resumo das Histórias
 
 | ID | Descrição | Ator | Prioridade |
 |----|-----------|------|------------|
@@ -209,8 +237,12 @@ Interface disponível em: `http://localhost:5173`
 | US11 | Forma de Pagamento | Banco Agente | Baixa |
 
 ---
+##  Propostas de melhoria
+- Implementar service de Email para que as alterações dos status dos pedidos sejam notificadas. 
+- Implementar lógica de seleção de seguros desejados para compor os pedidos. 
+---
 
-## 📌 Observações
+##  Observações
 
 - O sistema é exclusivamente web, acessado via Internet
 - Toda operação exige autenticação prévia
