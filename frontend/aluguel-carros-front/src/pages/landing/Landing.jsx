@@ -60,16 +60,17 @@ const destinosInspiracao = [
     estado: "MARANHÃO",
     img: "https://www.umviajante.com.br/wp-content/uploads/2019/09/chapada-das-mesas-maranhao-023.jpg",
   },
+    {
+    nome: "Belo Horizonte",
+    estado: "MINAS GERAIS",
+    img: "https://content.r9cdn.net/rimg/dimg/ec/dc/35e2faf0-city-10930-17b1a6be790.jpg?width=1200&height=630&xhint=1400&yhint=972&crop=true",
+  },
   {
     nome: "Fortaleza",
     estado: "CEARÁ",
     img: "https://images.trvl-media.com/place/6142832/917c6b31-1da4-4e62-9869-79b2c991dec8.jpg",
   },
-  {
-    nome: "Belo Horizonte",
-    estado: "MINAS GERAIS",
-    img: "https://content.r9cdn.net/rimg/dimg/ec/dc/35e2faf0-city-10930-17b1a6be790.jpg?width=1200&height=630&xhint=1400&yhint=972&crop=true",
-  },
+
 
   {
     nome: "Chapada Diamantina",
