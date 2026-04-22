@@ -4,6 +4,8 @@
 
 <img src="frontend/aluguel-carros-front/src/assets/logo-ciel.png" width="200"/>
 
+
+
 <br/>
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-purple?style=for-the-badge&logo=kotlin&logoColor=white)
@@ -22,13 +24,13 @@
 
 ---
 
-##  Sobre o Projeto
+##  🧾 Sobre o Projeto
 
 Sistema web de aluguel de carros desenvolvido como atividade prática da disciplina de Laboratório de Desenvolvimento de Software da PUC Minas. O projeto incial **MVP** preve que plataforma permite que clientes criem e cancelem pedidos de aluguel, enquanto agentes (empresas ou bancos) avaliam financeiramente esses pedidos e aprovam ou reprovam os contratos.
 
 ---
 
-##  Tecnologias
+##  ⚙️Tecnologias
 
 | Camada | Tecnologia |
 |--------|-----------|
@@ -39,7 +41,7 @@ Sistema web de aluguel de carros desenvolvido como atividade prática da discipl
 
 ---
 
-##  Como Executar
+##  🚀 Como Executar
 
 ### Backend
 
@@ -61,10 +63,10 @@ Interface disponível em: `http://localhost:5173`
 
 ---
 
-## 🔌 API e Atores
+##  🔌 API e Atores
 
 <details>
-<summary><strong>📡 Endpoints da API</strong></summary>
+<summary><strong> Endpoints da API</strong></summary>
 
 ### Auth
 | Método | Rota | Descrição |
@@ -109,7 +111,7 @@ Interface disponível em: `http://localhost:5173`
 </details>
 
 <details>
-<summary><strong>👥 Atores do Sistema</strong></summary>
+<summary><strong> Atores do Sistema</strong></summary>
 
 | Ator | Descrição |
 |------|-----------|
@@ -122,7 +124,7 @@ Interface disponível em: `http://localhost:5173`
 
 ---
 
-## Histórias de Usuário
+## 📋 Histórias de Usuário
 
 <details>
 <summary><strong> Cadastro e Autenticação</strong></summary>
@@ -237,14 +239,38 @@ Interface disponível em: `http://localhost:5173`
 | US11 | Forma de Pagamento | Banco Agente | Baixa |
 
 ---
-##  Propostas de melhoria
+
+##  📐 Diagramas
+<details>
+<summary><strong> Diagrama de Implantação</strong></summary>
+<img src="documentos/diagrama-impnatacao.png" width="1200"/>
+</details>
+
+<details>
+<summary><strong> Diagrama de Pacotes</strong></summary>
+<img src="documentos/Diagrama de pacotes.jpg" width="1200"/>
+</details>
+
+
+---
+## 💡 Propostas de melhoria
 - Implementar service de Email para que as alterações dos status dos pedidos sejam notificadas. 
 - Implementar lógica de seleção de seguros desejados para compor os pedidos. 
 ---
 
-##  Observações
+## 📝 Observações
 
 - O sistema é exclusivamente web, acessado via Internet
 - Toda operação exige autenticação prévia
 - O fluxo principal segue a sequência: **Cadastro → Login → Pedido → Análise Financeira → Contrato**
 - O banco de dados é H2 in-memory — os dados são populados automaticamente ao subir o backend via `DataLoader`
+
+```text
+ ██████╗██╗███████╗██╗         ██████╗ █████╗ ██████╗ ███████╗
+██╔════╝██║██╔════╝██║        ██╔════╝██╔══██╗██╔══██╗██╔════╝
+██║     ██║█████╗  ██║        ██║     ███████║██████╔╝███████╗
+██║     ██║██╔══╝  ██║        ██║     ██╔══██║██╔══██╗╚════██║
+╚██████╗██║███████╗███████╗   ╚██████╗██║  ██║██║  ██║███████║
+ ╚═════╝╚═╝╚══════╝╚══════╝    ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+```
+</div>
