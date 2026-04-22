@@ -19,7 +19,6 @@ public class PedidoService {
     private final PedidoRepository repository;
     private final AutomovelRepository automovelRepository;
 
-    // ✅ Injeção correta via construtor
     public PedidoService(PedidoRepository repository, AutomovelRepository automovelRepository) {
         this.repository = repository;
         this.automovelRepository = automovelRepository;
@@ -27,7 +26,6 @@ public class PedidoService {
 
    public PedidoAluguel criar(PedidoCreateDTO dto) {
 
-    // 🔥 validações obrigatórias
     if (dto.getClienteId() == null || dto.getAutomovelId() == null) {
         throw new RuntimeException("Cliente e automóvel são obrigatórios");
     }
@@ -43,17 +41,14 @@ public class PedidoService {
     pedido.setQuantidadeDias(dto.getQuantidadeDias());
     pedido.setObservacoes(dto.getObservacoes());
 
-    // 🔥 CORRETO: backend controla data (evita erro do frontend)
     pedido.setDataFimPretendida(
         LocalDate.now().plusDays(dto.getQuantidadeDias())
     );
 
-    // 🔥 buscar carro
     Automovel carro = automovelRepository
         .findById(dto.getAutomovelId())
         .orElseThrow(() -> new RuntimeException("Carro não encontrado"));
 
-    // 🔥 cálculo do valor
     BigDecimal valor = carro.getValorDiaria()
         .multiply(BigDecimal.valueOf(dto.getQuantidadeDias()));
 
@@ -70,6 +65,16 @@ public class PedidoService {
 
     public List<PedidoAluguel> listarTodos() {
         return repository.listarTodos();
+    }
+
+    public void analisar(Long id, Long agenteId) {
+        PedidoAluguel pedido = repository.buscarPorId(id)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+        pedido.setStatus(StatusPedido.EM_ANALISE);
+        pedido.setAgenteId(agenteId);
+
+        repository.atualizar(pedido);
     }
 
     public void aprovar(Long id, Long agenteId) {
@@ -97,6 +102,16 @@ public class PedidoService {
             .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
 
         pedido.setStatus(StatusPedido.CANCELADO);
+
+        repository.atualizar(pedido);
+    }
+
+    public void converterEmContrato(Long id, Long agenteId) {
+        PedidoAluguel pedido = repository.buscarPorId(id)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+        pedido.setStatus(StatusPedido.CONVERTIDO_EM_CONTRATO);
+        pedido.setAgenteId(agenteId);
 
         repository.atualizar(pedido);
     }

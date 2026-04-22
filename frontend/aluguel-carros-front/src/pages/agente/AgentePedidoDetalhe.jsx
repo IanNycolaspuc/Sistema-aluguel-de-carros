@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   buscarPedido,
+  analisarPedido,
   aprovarPedido,
   rejeitarPedido,
+  converterContratoPedido,
 } from "../../service/agenteService";
 import StatusBadge from "../../components/StatusBadge";
 import Header from "../../components/Header";
@@ -32,27 +34,15 @@ export default function AgentePedidoDetalhe() {
       .finally(() => setLoading(false));
   }
 
-  async function handleAprovar() {
+  async function executarAcao(acao, mensagemSucesso) {
     setProcessando(true);
+    setMensagem(null);
     try {
-      await aprovarPedido(id, usuario.id);
-      setMensagem({ tipo: "success", texto: "Pedido aprovado com sucesso!" });
+      await acao();
+      setMensagem({ tipo: "success", texto: mensagemSucesso });
       carregarPedido();
     } catch {
-      setMensagem({ tipo: "error", texto: "Erro ao aprovar pedido." });
-    } finally {
-      setProcessando(false);
-    }
-  }
-
-  async function handleRejeitar() {
-    setProcessando(true);
-    try {
-      await rejeitarPedido(id, usuario.id);
-      setMensagem({ tipo: "warning", texto: "Pedido rejeitado." });
-      carregarPedido();
-    } catch {
-      setMensagem({ tipo: "error", texto: "Erro ao rejeitar pedido." });
+      setMensagem({ tipo: "error", texto: "Erro ao processar ação." });
     } finally {
       setProcessando(false);
     }
@@ -61,6 +51,97 @@ export default function AgentePedidoDetalhe() {
   const formatarData = (data) =>
     data ? new Date(data).toLocaleDateString("pt-BR") : "—";
 
+  // Botões dinâmicos de acordo com o status atual do pedido
+  function renderAcoes() {
+    if (!pedido) return null;
+
+    switch (pedido.status) {
+      case "PENDENTE":
+        return (
+          <div style={styles.actions}>
+            <button
+              onClick={() => executarAcao(
+                () => analisarPedido(id, usuario.id),
+                "Pedido colocado em análise."
+              )}
+              disabled={processando}
+              style={styles.analisarBtn}
+            >
+              {processando ? "Processando..." : "🔍 Em Análise"}
+            </button>
+            <button
+              onClick={() => executarAcao(
+                () => aprovarPedido(id, usuario.id),
+                "Pedido aprovado com sucesso!"
+              )}
+              disabled={processando}
+              style={styles.aprovarBtn}
+            >
+              {processando ? "Processando..." : "✓ Aprovar"}
+            </button>
+            <button
+              onClick={() => executarAcao(
+                () => rejeitarPedido(id, usuario.id),
+                "Pedido rejeitado."
+              )}
+              disabled={processando}
+              style={styles.rejeitarBtn}
+            >
+              {processando ? "Processando..." : "✗ Rejeitar"}
+            </button>
+          </div>
+        );
+
+      case "EM_ANALISE":
+        return (
+          <div style={styles.actions}>
+            <button
+              onClick={() => executarAcao(
+                () => aprovarPedido(id, usuario.id),
+                "Pedido aprovado com sucesso!"
+              )}
+              disabled={processando}
+              style={styles.aprovarBtn}
+            >
+              {processando ? "Processando..." : "✓ Aprovar"}
+            </button>
+            <button
+              onClick={() => executarAcao(
+                () => rejeitarPedido(id, usuario.id),
+                "Pedido rejeitado."
+              )}
+              disabled={processando}
+              style={styles.rejeitarBtn}
+            >
+              {processando ? "Processando..." : "✗ Rejeitar"}
+            </button>
+          </div>
+        );
+
+      case "APROVADO":
+        return (
+          <div style={styles.actions}>
+            <button
+              onClick={() => executarAcao(
+                () => converterContratoPedido(id, usuario.id),
+                "Pedido convertido em contrato!"
+              )}
+              disabled={processando}
+              style={styles.contratoBtn}
+            >
+              {processando ? "Processando..." : "📄 Converter em Contrato"}
+            </button>
+          </div>
+        );
+
+      // REJEITADO, CANCELADO, CONVERTIDO_EM_CONTRATO → sem ações
+      default:
+        return (
+          <p style={styles.encerrado}>Este pedido está encerrado e não pode ser alterado.</p>
+        );
+    }
+  }
+
   return (
     <div style={styles.page}>
       <Header />
@@ -68,7 +149,6 @@ export default function AgentePedidoDetalhe() {
       <main style={styles.main}>
         <div style={styles.container}>
 
-          {/* BOTÃO VOLTAR */}
           <button
             onClick={() => navigate("/agente/pedidos")}
             style={styles.backBtn}
@@ -76,21 +156,18 @@ export default function AgentePedidoDetalhe() {
             ← Voltar
           </button>
 
-          {/* LOADING */}
           {loading ? (
             <p style={styles.loading}>Carregando pedido...</p>
           ) : !pedido ? (
             <p style={styles.error}>Pedido não encontrado.</p>
           ) : (
             <div style={styles.card}>
-              
-              {/* HEADER DO CARD */}
+
               <div style={styles.cardHeader}>
                 <h2 style={styles.title}>Pedido #{pedido.id}</h2>
                 <StatusBadge status={pedido.status} />
               </div>
 
-              {/* INFOS */}
               <div style={styles.infoGrid}>
                 <Info label="Cliente ID" value={pedido.clienteId} />
                 <Info label="Automóvel ID" value={pedido.automovelId} />
@@ -98,42 +175,15 @@ export default function AgentePedidoDetalhe() {
                 <Info label="Data Fim" value={formatarData(pedido.dataFimPretendida)} />
                 <Info
                   label="Valor"
-                  value={
-                    pedido.valorPrevisto != null
-                      ? `R$ ${pedido.valorPrevisto}`
-                      : "—"
-                  }
+                  value={pedido.valorPrevisto != null ? `R$ ${pedido.valorPrevisto}` : "—"}
                 />
-                <Info
-                  label="Observações"
-                  value={pedido.observacoes || "Nenhuma"}
-                />
-
+                <Info label="Observações" value={pedido.observacoes || "Nenhuma"} />
                 {pedido.agenteId && (
                   <Info label="Agente ID" value={pedido.agenteId} />
                 )}
               </div>
 
-              {/* AÇÕES */}
-              {pedido.status === "PENDENTE" && (
-                <div style={styles.actions}>
-                  <button
-                    onClick={handleAprovar}
-                    disabled={processando}
-                    style={styles.aprovarBtn}
-                  >
-                    {processando ? "Processando..." : "✓ Aprovar"}
-                  </button>
-
-                  <button
-                    onClick={handleRejeitar}
-                    disabled={processando}
-                    style={styles.rejeitarBtn}
-                  >
-                    {processando ? "Processando..." : "✗ Rejeitar"}
-                  </button>
-                </div>
-              )}
+              {renderAcoes()}
             </div>
           )}
         </div>
@@ -141,7 +191,6 @@ export default function AgentePedidoDetalhe() {
 
       <Footer />
 
-      {/* ALERT GLOBAL */}
       {mensagem && (
         <AlertMensagem
           type={mensagem.tipo}
@@ -153,7 +202,6 @@ export default function AgentePedidoDetalhe() {
   );
 }
 
-/* COMPONENTE AUXILIAR */
 function Info({ label, value }) {
   return (
     <div style={styles.infoBox}>
@@ -163,7 +211,6 @@ function Info({ label, value }) {
   );
 }
 
-/* STYLES */
 const styles = {
   page: {
     minHeight: "100vh",
@@ -198,15 +245,8 @@ const styles = {
     alignSelf: "flex-start",
   },
 
-  loading: {
-    textAlign: "center",
-    color: "#6b7280",
-  },
-
-  error: {
-    textAlign: "center",
-    color: "#ef4444",
-  },
+  loading: { textAlign: "center", color: "#6b7280" },
+  error: { textAlign: "center", color: "#ef4444" },
 
   card: {
     background: "#fff",
@@ -247,19 +287,25 @@ const styles = {
     flexDirection: "column",
   },
 
-  infoLabel: {
-    fontSize: "12px",
-    color: "#6b7280",
-  },
-
-  infoValue: {
-    fontSize: "14px",
-    color: "#111827",
-  },
+  infoLabel: { fontSize: "12px", color: "#6b7280" },
+  infoValue: { fontSize: "14px", color: "#111827" },
 
   actions: {
     display: "flex",
     gap: "12px",
+    flexWrap: "wrap",
+  },
+
+  analisarBtn: {
+    flex: 1,
+    padding: "12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "linear-gradient(135deg,#3b82f6,#2563eb)",
+    color: "#fff",
+    fontWeight: 700,
+    cursor: "pointer",
+    minWidth: "140px",
   },
 
   aprovarBtn: {
@@ -271,6 +317,7 @@ const styles = {
     color: "#fff",
     fontWeight: 700,
     cursor: "pointer",
+    minWidth: "140px",
   },
 
   rejeitarBtn: {
@@ -282,5 +329,25 @@ const styles = {
     color: "#fff",
     fontWeight: 700,
     cursor: "pointer",
+    minWidth: "140px",
+  },
+
+  contratoBtn: {
+    flex: 1,
+    padding: "12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "linear-gradient(135deg,#8b5cf6,#7c3aed)",
+    color: "#fff",
+    fontWeight: 700,
+    cursor: "pointer",
+    minWidth: "200px",
+  },
+
+  encerrado: {
+    textAlign: "center",
+    color: "#9ca3af",
+    fontSize: "13px",
+    fontStyle: "italic",
   },
 };

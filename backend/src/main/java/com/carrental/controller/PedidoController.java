@@ -36,6 +36,11 @@ public class PedidoController {
         return service.buscarPorId(id).orElse(null);
     }
 
+    @Put("/{id}/analisar")
+    public void analisar(Long id, @QueryValue Long agenteId) {
+        service.analisar(id, agenteId);
+    }
+
     @Put("/{id}/aprovar")
     public void aprovar(Long id, @QueryValue Long agenteId) {
         service.aprovar(id, agenteId);
@@ -49,5 +54,10 @@ public class PedidoController {
     @Put("/{id}/cancelar")
     public void cancelar(Long id) {
         service.cancelar(id);
+    }
+
+    @Put("/{id}/converter-contrato")
+    public void converterContrato(Long id, @QueryValue Long agenteId) {
+        service.converterEmContrato(id, agenteId);
     }
 }
