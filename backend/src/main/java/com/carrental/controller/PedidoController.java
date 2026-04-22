@@ -36,19 +36,27 @@ public class PedidoController {
         return service.buscarPorId(id).orElse(null);
     }
 
+    // ── Ações principais ────────────────────────────────────────────────────
+
     @Put("/{id}/analisar")
-    public void analisar(Long id, @QueryValue Long agenteId) {
-        service.analisar(id, agenteId);
+    public void analisar(Long id,
+                         @QueryValue Long agenteId,
+                         @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.analisar(id, agenteId, observacoesAgente);
     }
 
     @Put("/{id}/aprovar")
-    public void aprovar(Long id, @QueryValue Long agenteId) {
-        service.aprovar(id, agenteId);
+    public void aprovar(Long id,
+                        @QueryValue Long agenteId,
+                        @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.aprovar(id, agenteId, observacoesAgente);
     }
 
     @Put("/{id}/rejeitar")
-    public void rejeitar(Long id, @QueryValue Long agenteId) {
-        service.rejeitar(id, agenteId);
+    public void rejeitar(Long id,
+                         @QueryValue Long agenteId,
+                         @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.rejeitar(id, agenteId, observacoesAgente);
     }
 
     @Put("/{id}/cancelar")
@@ -57,7 +65,32 @@ public class PedidoController {
     }
 
     @Put("/{id}/converter-contrato")
-    public void converterContrato(Long id, @QueryValue Long agenteId) {
-        service.converterEmContrato(id, agenteId);
+    public void converterContrato(Long id,
+                                  @QueryValue Long agenteId,
+                                  @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.converterEmContrato(id, agenteId, observacoesAgente);
+    }
+
+    // ── Reverter / Desfazer ─────────────────────────────────────────────────
+
+    @Put("/{id}/reverter-pendente")
+    public void reverterPendente(Long id,
+                                 @QueryValue Long agenteId,
+                                 @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.reverterParaPendente(id, agenteId, observacoesAgente);
+    }
+
+    @Put("/{id}/reverter-analise")
+    public void reverterAnalise(Long id,
+                                @QueryValue Long agenteId,
+                                @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.reverterParaEmAnalise(id, agenteId, observacoesAgente);
+    }
+
+    @Put("/{id}/reverter-aprovado")
+    public void reverterAprovado(Long id,
+                                 @QueryValue Long agenteId,
+                                 @QueryValue(defaultValue = "") String observacoesAgente) {
+        service.reverterParaAprovado(id, agenteId, observacoesAgente);
     }
 }

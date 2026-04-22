@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS enderecos (
 
 -- Tabela de clientes (JOINED com usuarios)
 CREATE TABLE IF NOT EXISTS clientes (
-    id              BIGINT PRIMARY KEY,  -- FK para usuarios
+    id              BIGINT PRIMARY KEY,
     rg              VARCHAR(14) NOT NULL,
     cpf             VARCHAR(14) NOT NULL,
     telefone        VARCHAR(20) NOT NULL,
@@ -43,18 +43,24 @@ CREATE TABLE IF NOT EXISTS automovel (
     ano       INT,
     placa     VARCHAR(20),
     matricula VARCHAR(50),
-    status    VARCHAR(50)
+    status    VARCHAR(50),
+    valor_diaria DECIMAL(10,2)
 );
 
 -- Tabela de pedidos
 CREATE TABLE IF NOT EXISTS pedidos (
-    id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id         BIGINT,
-    automovel_id       BIGINT,
-    data_solicitacao   TIMESTAMP,
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id          BIGINT,
+    automovel_id        BIGINT,
+    data_solicitacao    TIMESTAMP,
     data_fim_pretendida DATE,
-    valor_previsto     DECIMAL(10,2),
-    observacoes        VARCHAR(500),
-    status             VARCHAR(50),
-    agente_id          BIGINT
+    quantidade_dias     INT,
+    valor_previsto      DECIMAL(10,2),
+    observacoes         VARCHAR(500),
+    observacoes_agente  VARCHAR(500),
+    status              VARCHAR(50),
+    agente_id           BIGINT
 );
+
+-- ⚠️ Se o banco já existia antes desta alteração, rode manualmente:
+-- ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS observacoes_agente VARCHAR(500);

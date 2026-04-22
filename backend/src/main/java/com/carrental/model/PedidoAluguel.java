@@ -6,28 +6,34 @@ import com.carrental.enums.StatusPedido;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.math.BigDecimal;
 
 @Serdeable
 @Entity
 @Table(name = "pedidos")
-
 public class PedidoAluguel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private Long clienteId;
     private Long automovelId;
 
     private LocalDateTime dataSolicitacao;
     private LocalDate dataFimPretendida;
+    private Integer quantidadeDias;
 
     private BigDecimal valorPrevisto;
+
+    // Observações do cliente (preenchida na criação do pedido)
     private String observacoes;
+
+    // Observações do agente (motivo de aprovação, rejeição, etc.)
+    private String observacoesAgente;
 
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
+
     private Long agenteId;
 
     public PedidoAluguel() {
@@ -35,16 +41,8 @@ public class PedidoAluguel {
         this.dataSolicitacao = LocalDateTime.now();
     }
 
-    private Integer quantidadeDias;
+    // Getters e Setters
 
-    // getters e setters
-    public Integer getQuantidadeDias() {
-        return quantidadeDias;
-    }
-
-    public void setQuantidadeDias(Integer quantidadeDias) {
-        this.quantidadeDias = quantidadeDias;
-    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -59,11 +57,17 @@ public class PedidoAluguel {
     public LocalDate getDataFimPretendida() { return dataFimPretendida; }
     public void setDataFimPretendida(LocalDate dataFimPretendida) { this.dataFimPretendida = dataFimPretendida; }
 
+    public Integer getQuantidadeDias() { return quantidadeDias; }
+    public void setQuantidadeDias(Integer quantidadeDias) { this.quantidadeDias = quantidadeDias; }
+
     public BigDecimal getValorPrevisto() { return valorPrevisto; }
     public void setValorPrevisto(BigDecimal valorPrevisto) { this.valorPrevisto = valorPrevisto; }
 
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
+
+    public String getObservacoesAgente() { return observacoesAgente; }
+    public void setObservacoesAgente(String observacoesAgente) { this.observacoesAgente = observacoesAgente; }
 
     public StatusPedido getStatus() { return status; }
     public void setStatus(StatusPedido status) { this.status = status; }
